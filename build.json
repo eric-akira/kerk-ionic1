@@ -1,0 +1,18 @@
+{
+    "android": {
+        "release": {
+            "keystore": "kerkcontrol.keystore",
+            "storePassword": "kerk4life4twin",
+            "alias": "kerk",
+            "password": "kerk4gogo",
+            "keystoreType": ""
+        },
+        "debug": {
+        	"keystore": "kerkcontrol.keystore",
+            "storePassword": "kerk4life4twin",
+            "alias": "kerk",
+            "password": "kerk4gogo",
+            "keystoreType": ""
+        }
+    }
+}
