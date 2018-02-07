@@ -1,0 +1,32 @@
+<ion-view view-title="Insira os dados da sua Residência">
+  <ion-content class="back-black padding">
+  	<div class="color-white">
+  		<h1 class="color-white">Preencha os dados da sua Residência</h1>
+      <p>Preencha o nome de sua Residência conforme seu gosto. Escolha também o local de instalação de seus dispositivo Kerk e lhe dê um nome.</p>
+  	</div>
+  	<div class="color-white padding-top">
+      <div class="list">
+        <label class="item-input item-stacked-label">
+          <span class="input-label color-white">Nome da Residência</span>
+          <input type="text" name="senha" ng-model="home.name">
+        </label>
+        <label class="item-input item-select item-stacked-label">
+          <span class="input-label color-white">Local do Dispositivo</span>
+          <select ng-model="home.devicePlace">
+            <option ng-repeat="place in places track by $index" value="{{place}}">{{place}}</option>
+          </select>
+        </label>
+        <label class="item-input item-stacked-label">
+          <span class="input-label color-white">Nome do Dispositivo</span>
+          <input type="text" name="senha" ng-model="home.deviceName">
+        </label>
+      </div>
+  	</div>
+    <div class="color-white padding-top">
+      <p>Está tudo certo?</p>
+      <button class="button button-block button-positive" ng-click="setHome()">
+        <ion-icon class="ion-checkmark"></ion-icon> Sim!
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

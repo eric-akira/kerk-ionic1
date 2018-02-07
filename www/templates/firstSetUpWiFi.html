@@ -1,0 +1,28 @@
+<ion-view view-title="Insira os dados da Rede Local">
+  <ion-content class="back-black padding">
+  	<div class="color-white">
+  		<h1 class="color-white">Insira os dados da sua Rede Local</h1>
+  		<p>Por favor, escolha a sua Rede Local e insira a senha. Deixe a senha em branco caso sua Rede Local seja aberta.</p>
+  	</div>
+  	<div class="color-white padding-top">
+      <div class="list">
+        <label class="item-input item-select item-stacked-label">
+          <span class="input-label color-white">SSID</span>
+          <select ng-model="wifi.ssid">
+            <option ng-repeat="ssid in wifi.ssidList track by $index" value="{{ssid}}">{{ssid}}</option>
+          </select>
+        </label>
+        <label class="item-input item-stacked-label">
+          <span class="input-label color-white">Senha</span>
+          <input type="text" name="senha" ng-model="wifi.senha">
+        </label>
+      </div>
+  	</div>
+    <div class="color-white padding-top">
+      <p>Os dados estão corretos?</p>
+      <button class="button button-block button-positive" ng-click="setWiFi()">
+        <ion-icon class="ion-checkmark"></ion-icon> Sim!
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

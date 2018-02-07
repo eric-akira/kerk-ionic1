@@ -1,0 +1,11 @@
+<ion-view view-title="{{parent}} - {{currentPlace.ownName}}">
+  <ion-content class="back-black">
+    <div class="row">
+    	<div class="col col-50" ng-repeat="device in currentPlace.deviceList track by $index">
+	    	<button class="button button-block button-transparent" ng-click="goDeviceControl(device)">
+	    		{{device}}
+	    	</button>
+    	</div>
+    </div>
+  </ion-content>
+</ion-view>

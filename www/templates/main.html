@@ -1,0 +1,25 @@
+<ion-view view-title="Home - {{currentHome}}">
+  <ion-content class="back-black">
+    <div class="row">
+    	<div class="col">
+	    	<button class="button button-block button-transparent">
+	    		<ion-icon class="ion-plus-round"></ion-icon> Adicionar Novo Dispositivo
+	    	</button>
+    	</div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button class="button button-block button-transparent" ng-click="resetar()">
+                Resetar Dados (!)
+            </button>
+        </div>
+    </div>
+    <div class="row">
+    	<div class="col col-50" ng-repeat="place in placeList track by $index">
+	    	<button class="button button-block button-transparent" ng-click="goPlaceControl(place)">
+	    		{{place}}
+	    	</button>
+    	</div>
+    </div>
+  </ion-content>
+</ion-view>
