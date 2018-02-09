@@ -1,5 +1,6 @@
-<ion-view view-title="Home - {{currentHome}}">
-  <ion-content class="back-black">
+<ion-view view-title="Home">
+  <ion-content class="background-kerk">
+    <!--
     <div class="row">
     	<div class="col">
 	    	<button class="button button-block button-transparent">
@@ -8,18 +9,75 @@
     	</div>
     </div>
     <div class="row">
-        <div class="col">
-            <button class="button button-block button-transparent" ng-click="resetar()">
-                Resetar Dados (!)
-            </button>
-        </div>
-    </div>
-    <div class="row">
     	<div class="col col-50" ng-repeat="place in placeList track by $index">
 	    	<button class="button button-block button-transparent" ng-click="goPlaceControl(place)">
 	    		{{place}}
 	    	</button>
     	</div>
+    </div>
+    -->
+    <div class="row" ng-show="!kerk">
+        <div class="col">
+            <button class="button button-block button-balanced" ui-sref="firstSetUp">
+                <ion-icon class="ion-log-in"></ion-icon> Configure seu Kerk Control
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="list card">
+                <div class="item item-image">
+                    <img src="img/quarto-casal.jpg">
+                </div>
+                <div class="item item-divider">
+                    <ion-icon class="ion-grid"></ion-icon> Quarto Casal
+                </div>
+            </div>
+        </div>
+        <div class="col-50">
+            <div class="list card">
+                <div class="item item-image">
+                    <img src="img/quarto-solteiro.jpg">
+                </div>
+                <div class="item item-divider">
+                    <ion-icon class="ion-grid"></ion-icon> Quarto Solteiro
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="list card">
+                <div class="item item-image">
+                    <img src="img/sala.jpg">
+                </div>
+                <div class="item item-divider">
+                    <ion-icon class="ion-grid"></ion-icon> Sala
+                </div>
+            </div>
+        </div>
+        <div class="col-50">
+            <div class="list card">
+                <div class="item item-image">
+                    <img src="img/cozinha.jpg">
+                </div>
+                <div class="item item-divider">
+                    <ion-icon class="ion-grid"></ion-icon> Cozinha
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-50">
+            <div class="list card">
+                <div class="item item-image">
+                    <img src="img/banheiro.jpg">
+                </div>
+                <div class="item item-divider">
+                    <ion-icon class="ion-grid"></ion-icon> Banheiro
+                </div>
+            </div>
+        </div>
     </div>
   </ion-content>
 </ion-view>

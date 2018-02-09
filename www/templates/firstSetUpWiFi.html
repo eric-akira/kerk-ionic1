@@ -1,28 +1,39 @@
 <ion-view view-title="Insira os dados da Rede Local">
-  <ion-content class="back-black padding">
-  	<div class="color-white">
-  		<h1 class="color-white">Insira os dados da sua Rede Local</h1>
-  		<p>Por favor, escolha a sua Rede Local e insira a senha. Deixe a senha em branco caso sua Rede Local seja aberta.</p>
-  	</div>
-  	<div class="color-white padding-top">
-      <div class="list">
-        <label class="item-input item-select item-stacked-label">
-          <span class="input-label color-white">SSID</span>
-          <select ng-model="wifi.ssid">
-            <option ng-repeat="ssid in wifi.ssidList track by $index" value="{{ssid}}">{{ssid}}</option>
-          </select>
-        </label>
-        <label class="item-input item-stacked-label">
-          <span class="input-label color-white">Senha</span>
-          <input type="text" name="senha" ng-model="wifi.senha">
-        </label>
+
+  <div class="bar bar-header bar-calm">
+    <button class="button button-icon icon ion-android-arrow-back" ng-click="goBack()"></button>
+    <h1 class="title">Configurar Rede Local</h1>
+  </div>
+
+  <ion-content class="has-header padding background-kerk">
+    <div class="card">
+      <div class="item item-text-wrap">
+        <div>
+      		<h1>Insira os dados da sua Rede Local</h1>
+      		<p>Por favor, digite o SSID e Senha da sua Rede Local. Deixe a senha em branco caso sua Rede Local seja aberta.</p>
+      	</div>
+      	<div class="padding-top">
+          <div class="list">
+            <label class="item item-input">
+              <span class="input-label">SSID</span>
+              <input type="text" name="senha" ng-model="wifi.ssid" placeholder="nome da rede">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Senha</span>
+              <input type="text" name="senha" ng-model="wifi.senha" placeholder="senha">
+            </label>
+          </div>
+      	</div>
+        <div class="padding-top">
+          <p>Os dados estão corretos?</p>
+          <button class="button button-block button-balanced" ng-click="setWiFi()">
+            <ion-icon class="ion-checkmark"></ion-icon> Sim!
+          </button>
+          <button class="button button-block button-balanced" ui-sref="firstSetUpHome">
+            Teste ->
+          </button>
+        </div>
       </div>
-  	</div>
-    <div class="color-white padding-top">
-      <p>Os dados estão corretos?</p>
-      <button class="button button-block button-positive" ng-click="setWiFi()">
-        <ion-icon class="ion-checkmark"></ion-icon> Sim!
-      </button>
     </div>
   </ion-content>
 </ion-view>

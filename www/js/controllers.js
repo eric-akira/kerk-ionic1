@@ -21,8 +21,64 @@ angular.module('starter.controllers', [])
   });
 })
 
-.controller('FirstSetUpCtrl', function($scope, $ionicLoading, $ionicPopup, $state, KerkCentralService) {
+.controller('FirstSetUpCtrl', function($scope, $ionicLoading, $ionicPopup, $state, $rootScope) {
   document.addEventListener('deviceready', DeviceReady, false);
+
+  function DeviceReady() {
+    WifiWizard2.getCurrentSSID(connectedSSIDWin, connectedSSIDFail);
+  }
+
+  function connectedSSIDWin(ssid) {
+    $rootScope.currentSSID = ssid;
+  }
+
+  function connectedSSIDFail(error) {
+    $rootScope.currentSSID = '';
+  }
+
+  $scope.iniciar = function() {
+    $ionicLoading.show();
+
+    if(ionic.Platform.isIOS()) {
+      WifiWizard2.iOSConnectNetwork('kerk_control', '', connectWifiWin, connectWifiFail);
+    } else {
+      //WifiWizard2.androidConnectNetwork('kerk_control', connectWifiWin, connectWifiFail);
+      //WifiWizard2.androidConnectNetwork('Kerk', connectWifiWin, connectWifiFail);
+      
+      WifiWizard2.androidConnectNetworkAsync('kerk_control').then(
+        function(success) {
+          console.log(success);
+          connectWifiWin(success);
+        },
+        function(error) {
+          console.log(error);
+          connectWifiFail(error);
+        }
+      );
+    }
+    
+    
+  };
+
+  function connectWifiWin(win) {
+    $ionicLoading.hide();
+    $state.go('firstSetUpWiFi');
+  }
+
+  function connectWifiFail(error) {
+    console.log(error);
+    $ionicLoading.hide();
+
+    $ionicPopup.alert({
+      title: 'Erro',
+      template: 'Tenha certeza de que o Kerk Control está no modo configuração e tente novamente.',
+      okText: 'Ok',
+      okType: 'button-positive'
+    });
+  }
+
+
+  /*document.addEventListener('deviceready', DeviceReady, false);
   $ionicLoading.show();
   $scope.tryCount = 0;
   $scope.retryLimit = 255;
@@ -81,12 +137,66 @@ angular.module('starter.controllers', [])
       $ionicLoading.show();
       $scope.getIp($scope.myIp);
     }
-  };
+  };*/
 
 })
 
-.controller('FirstSetUpWiFiCtrl', function($scope, $state, $stateParams, $ionicLoading, $ionicPopup, KerkCentralService) {
-  $scope.$on('$ionicView.enter', function(e) {
+.controller('FirstSetUpWiFiCtrl', function($scope, $state, $ionicLoading, $ionicPopup, $rootScope, $http) {
+  $scope.wifi = {
+    ssid: $rootScope.currentSSID,
+    senha: ''
+  };
+
+  $scope.setWiFi = function() {
+    console.log($scope.wifi);
+
+    $ionicLoading.show();
+
+    ssid = window.encodeURIComponent($scope.wifi.ssid);
+    password = window.encodeURIComponent($scope.wifi.senha);
+
+    console.log(ssid, password);
+
+    $http({method: 'GET', cache: false, url: 'http://192.168.4.1/wifisave?=' + ssid + '&p=' + password}).then(
+      function(data){
+        $ionicLoading.hide();
+        console.log(data);
+      },
+      function(error) {
+        $ionicLoading.hide();
+        console.log(error);
+      }
+    );
+  }
+
+  //WifiWizard2.scan({}, scanWin, scanFail);
+
+  function scanWin(networks) {
+    $rootScope.avaiableNetworks = networks;
+    console.log($rootScope.avaiableNetworks);
+
+    $scope.targetNetwork = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
+      return avaiableNetworks.SSID === 'Poow';
+    });
+
+    $scope.test = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
+      return avaiableNetworks.SSID === '12983=12';
+    });
+
+
+    console.log($scope.targetNetwork);
+    console.log($scope.test);
+  }
+
+  function scanFail(error) {
+    console.log(error);
+  }
+
+
+  //$http({method: 'GET', cache: false, url: 'http://' + ip + '/wifisave?=' + ssid + '&p=' + password});
+
+
+  /*$scope.$on('$ionicView.enter', function(e) {
     $scope.kerkIp = window.localStorage.getItem('kerk.mainIp');
     $scope.wifi = {};
     $scope.wifi.ssidList = $stateParams.ssidList;
@@ -117,19 +227,17 @@ angular.module('starter.controllers', [])
         });
       }
     );
-  };
+  };*/
 })
 
 .controller('FirstSetUpHomeCtrl', function($scope, $state, $ionicPopup) {
   $scope.home = {};
   $scope.places = ['Sala', 'Quarto Casal', 'Quarto Solteiro', 'Cozinha', 'Banheiro'];
-  $scope.home.devicePlace = $scope.places[0];
+  $scope.home.devicePlace = 'Sala';
   $scope.home.name = '';
   $scope.home.deviceName = '';
 
-  console.log($scope.home);
-
-  $scope.setHome = function() {
+  /*$scope.setHome = function() {
     console.log($scope.home);
     var name = $scope.home.name;
     var devicePlace = $scope.home.devicePlace;
@@ -193,7 +301,7 @@ angular.module('starter.controllers', [])
     window.localStorage.setItem('kerk.initial', 'second');
 
     $state.go('firstSetUpEnd');
-  };
+  };*/
 })
 
 .controller('SecondSetUpCtrl', function($scope, $ionicLoading, KerkCentralService, $state) {
@@ -321,8 +429,21 @@ angular.module('starter.controllers', [])
 })
 
 .controller('MainCtrl', function($scope, $state, $ionicPopup) {
+
   $scope.kerk = window.localStorage.getItem('kerk.save');
-  $scope.kerk = angular.fromJson($scope.kerk);
+  console.log($scope.kerk);
+
+  if($scope.kerk) {
+    console.log('configurado');
+    $scope.kerk = angular.fromJson($scope.kerk);
+  } else{
+    console.log('vazio...');
+    //$scope.kerk = {};
+  }
+
+  
+  
+  /*$scope.kerk = angular.fromJson($scope.kerk);
 
   $scope.currentHome = window.localStorage.getItem('kerk.currentHome');
 
@@ -344,7 +465,7 @@ angular.module('starter.controllers', [])
     });
   };
 
-  $scope.resetar = function() {
+  $scope.resetarDevice = function() {
     window.localStorage.clear();
 
     $ionicPopup.alert({
@@ -353,7 +474,7 @@ angular.module('starter.controllers', [])
       okText: 'Ok',
       okType: 'button-positive'
     });
-  }
+  }*/
 })
 
 .controller('PlaceControlCtrl', function($scope, $stateParams, $state) {
@@ -439,6 +560,21 @@ angular.module('starter.controllers', [])
     console.log('destoyed');
     $interval.cancel(promiseGetStatus);
   });
+})
+
+.controller('ConfigCtrl', function($scope, $ionicPopup, $ionicHistory) {
+  $scope.resetarDevice = function() {
+    window.localStorage.clear();
+
+    $ionicPopup.alert({
+      title: 'Dados Apagados',
+      template: 'Todos os dados do aplicativo foram apagados.',
+      okText: 'Ok',
+      okType: 'button-positive'
+    }).then(function(){
+      $ionicHistory.goBack();
+    });
+  }
 })
 
 .controller('TestesCtrl', function($scope, $ionicLoading){

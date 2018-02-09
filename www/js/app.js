@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $ionicHistory) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -18,6 +18,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
+    }
+
+    $rootScope.goBack = function() {
+      $ionicHistory.goBack();
     }
   });
 })
@@ -141,6 +145,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
+  .state('app.config', {
+    url: '/config',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/config.html',
+        controller: 'ConfigCtrl'
+      }
+    }
+  })
+
   .state('app.testes', {
     url: '/testes',
     views: {
@@ -153,6 +167,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/initial');
+  //$urlRouterProvider.otherwise('/initial');
+  $urlRouterProvider.otherwise('/app/main');
   //$urlRouterProvider.otherwise('/firstSetUpHome');
 });

@@ -6,6 +6,11 @@ body {
 	background-color: black;
 }
 
+.background-kerk {
+	background-image: url("../img/fundo.png");
+	background-size: cover;
+}
+
 .basic-padding {
 	padding: 20px;
 }
