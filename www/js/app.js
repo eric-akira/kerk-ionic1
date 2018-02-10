@@ -125,24 +125,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-  .state('app.placeControl', {
-    url: '/placeControl/:parent/:place',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/placeControl.html',
-        controller: 'PlaceControlCtrl'
-      }
-    }
+  .state('placeControl', {
+    url: '/placeControl/',
+    cache: false,
+    templateUrl: 'templates/placeControl.html',
+    controller: 'PlaceControlCtrl'
   })
 
-  .state('app.deviceControl', {
+  .state('deviceControl', {
     url: '/deviceControl/:parent/:device',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/deviceControl.html',
-        controller: 'DeviceControlCtrl'
-      }
-    }
+    cache: false,
+    templateUrl: 'templates/deviceControl.html',
+    controller: 'DeviceControlCtrl'
   })
 
   .state('app.config', {

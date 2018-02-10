@@ -599,7 +599,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('PlaceControlCtrl', function($scope, $stateParams, $state) {
-  $scope.currentPlace = angular.fromJson($stateParams.place);
+  /*$scope.currentPlace = angular.fromJson($stateParams.place);
   $scope.parent = $stateParams.parent;
 
   $scope.goDeviceControl = function(device) {
@@ -610,11 +610,11 @@ angular.module('starter.controllers', [])
       device: angular.toJson(deviceObj),
       parent: $scope.currentPlace.ownName
     });
-  };
+  };*/
 })
 
 .controller('DeviceControlCtrl', function($scope, $stateParams, CommandService, $ionicLoading, $ionicPopup, $interval) {
-  $ionicLoading.show();
+  /*$ionicLoading.show();
   var promiseGetStatus;
 
   $scope.currentDevice = angular.fromJson($stateParams.device);
@@ -680,7 +680,7 @@ angular.module('starter.controllers', [])
   $scope.$on('$destroy', function() {
     console.log('destoyed');
     $interval.cancel(promiseGetStatus);
-  });
+  });*/
 })
 
 .controller('ConfigCtrl', function($scope, $ionicPopup, $ionicHistory) {

@@ -1,16 +1,45 @@
 <ion-view view-title="Controle">
-  <ion-content class="back-black">
-	<div ng-repeat="button in buttons">
-		<div class="row">
-			<div class="col col-50">
-				<div class="center device-btn" ng-class="button.statusBtnClass" ng-click="changeStatus(this.button)">
+	<div class="bar bar-header bar-calm">
+	  <button class="button button-icon icon ion-android-arrow-back" ng-click="goBack()"></button>
+	  <h1 class="title">Principal</h1>
+	</div>
+	<ion-content class="padding background-kerk has-header">
+		<!--
+		<div ng-repeat="button in buttons">
+			<div class="row">
+				<div class="col col-50">
+					<div class="center device-btn" ng-class="button.statusBtnClass" ng-click="changeStatus(this.button)">
+					</div>
+				</div>
+				<div class="col col-50">
+					<h2 class="color-white">Botão {{button.id}}</h2>
+					<h3 ng-class="button.statusTxtClass">{{button.statusText}}</h3>
 				</div>
 			</div>
-			<div class="col col-50">
-				<h2 class="color-white">Botão {{button.id}}</h2>
-				<h3 ng-class="button.statusTxtClass">{{button.statusText}}</h3>
+		</div>
+		-->
+
+		<div class="card">
+			<div class="item item-text-wrap back-black">
+				<div class="row">
+					<div class="col col-50">
+						<div class="center device-btn device-on"></div>
+					</div>
+					<div class="col col-50">
+						<h2 class="color-white">Botão 1</h2>
+						<h3 class="color-blue">Ligado</h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col col-50">
+						<div class="center device-btn device-off"></div>
+					</div>
+					<div class="col col-50">
+						<h2 class="color-white">Botão 2</h2>
+						<h3 class="color-grey">Desligado</h3>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-  </ion-content>
+	</ion-content>
 </ion-view>

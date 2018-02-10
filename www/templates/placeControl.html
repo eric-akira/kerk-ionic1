@@ -1,11 +1,35 @@
-<ion-view view-title="{{parent}} - {{currentPlace.ownName}}">
-  <ion-content class="back-black">
-    <div class="row">
-    	<div class="col col-50" ng-repeat="device in currentPlace.deviceList track by $index">
-	    	<button class="button button-block button-transparent" ng-click="goDeviceControl(device)">
-	    		{{device}}
-	    	</button>
-    	</div>
-    </div>
-  </ion-content>
+<ion-view view-title="Quarto Casal">
+	<div class="bar bar-header bar-calm">
+	  <button class="button button-icon icon ion-android-arrow-back" ng-click="goBack()"></button>
+	  <h1 class="title">Quarto Casal</h1>
+	</div>
+  	<ion-content class="padding background-kerk has-header">
+	    <!--
+	    <div class="row">
+	    	<div class="col col-50" ng-repeat="device in currentPlace.deviceList track by $index">
+		    	<button class="button button-block button-transparent" ng-click="goDeviceControl(device)">
+		    		{{device}}
+		    	</button>
+	    	</div>
+	    </div>
+	    -->
+	    <div class="list">
+	    	<div class="item item-avatar item-button-right">
+	    		<img src="img/lampada.jpg">
+	    		<h2>Principal</h2>
+	    		<p>Há lâmpada(s) acessa(s)</p>
+	    		<button class="button button-energized" style="top: 16px;min-width:40px;min-height: 40px;" ui-sref="deviceControl">
+	    			<i class="icon ion-ios-lightbulb"></i>
+	    		</button>
+	    	</div>
+	    	<div class="item item-avatar item-button-right">
+	    		<img src="img/lampada.jpg">
+	    		<h2>Closet</h2>
+	    		<p>Lâmpadas apagadas</p>
+	    		<button class="button button-energized" style="top: 16px;min-width:40px;min-height: 40px;">
+	    			<i class="icon ion-ios-lightbulb-outline"></i>
+	    		</button>
+	    	</div>
+	    </div>
+  	</ion-content>
 </ion-view>
