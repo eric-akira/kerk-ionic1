@@ -36,47 +36,6 @@ angular.module('starter.controllers', [])
     $rootScope.currentSSID = '';
   }
 
-  $scope.iniciar = function() {
-    $ionicLoading.show();
-
-    if(ionic.Platform.isIOS()) {
-      WifiWizard2.iOSConnectNetwork('kerk_control', '', connectWifiWin, connectWifiFail);
-    } else {
-      //WifiWizard2.androidConnectNetwork('kerk_control', connectWifiWin, connectWifiFail);
-      //WifiWizard2.androidConnectNetwork('Kerk', connectWifiWin, connectWifiFail);
-      
-      WifiWizard2.androidConnectNetworkAsync('kerk_control').then(
-        function(success) {
-          console.log(success);
-          connectWifiWin(success);
-        },
-        function(error) {
-          console.log(error);
-          connectWifiFail(error);
-        }
-      );
-    }
-    
-    
-  };
-
-  function connectWifiWin(win) {
-    $ionicLoading.hide();
-    $state.go('firstSetUpWiFi');
-  }
-
-  function connectWifiFail(error) {
-    console.log(error);
-    $ionicLoading.hide();
-
-    $ionicPopup.alert({
-      title: 'Erro',
-      template: 'Tenha certeza de que o Kerk Control está no modo configuração e tente novamente.',
-      okText: 'Ok',
-      okType: 'button-positive'
-    });
-  }
-
 
   /*document.addEventListener('deviceready', DeviceReady, false);
   $ionicLoading.show();
@@ -141,11 +100,41 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('FirstSetUpWiFiCtrl', function($scope, $state, $ionicLoading, $ionicPopup, $rootScope, $http) {
+.controller('FirstSetUpWiFiCtrl', function($scope, $state, $ionicLoading, $ionicPopup, $rootScope, $http, $ionicHistory, $timeout) {
+  $ionicLoading.show();
+  document.addEventListener('deviceready', deviceReady, false);
+
   $scope.wifi = {
     ssid: $rootScope.currentSSID,
     senha: ''
   };
+
+  $scope.hideBack = function() {
+    $ionicLoading.hide();
+
+    $ionicPopup.alert({
+      title: 'Erro',
+      template: 'Tenha certeza de que o Kerk Control está no modo configuração, que você está conectado a sua Rede Local e que está com o 3G/4G desligado, e tente novamente.',
+      okText: 'Ok',
+      okType: 'button-positive'
+    }).then(function(){
+      $ionicHistory.goBack();
+    });
+  }
+
+  function connectWifiWin(win) {
+    $ionicLoading.hide();
+    console.log('win!');
+  }
+
+  function connectWifiFail(error) {
+    console.log(error);
+    $scope.hideBack();
+  }
+
+  function deviceReady() {
+    WifiWizard2.scan({}, scanWin, scanFail);
+  }
 
   $scope.setWiFi = function() {
     console.log($scope.wifi);
@@ -155,43 +144,160 @@ angular.module('starter.controllers', [])
     ssid = window.encodeURIComponent($scope.wifi.ssid);
     password = window.encodeURIComponent($scope.wifi.senha);
 
-    console.log(ssid, password);
-
-    $http({method: 'GET', cache: false, url: 'http://192.168.4.1/wifisave?=' + ssid + '&p=' + password}).then(
+    //$http({method: 'GET', cache: false, url: 'http://192.168.4.1/wifisave?=' + ssid + '&p=' + password}).then(
+    $http({method: 'GET', cache: false, url: 'http://192.168.4.1/wifi?SSID="'+ssid+'"&PASSWORD="'+password+'"'}).then(
       function(data){
-        $ionicLoading.hide();
         console.log(data);
+        $scope.checkConfig();
       },
       function(error) {
-        $ionicLoading.hide();
         console.log(error);
+        $scope.hideBack();
       }
     );
   }
 
-  //WifiWizard2.scan({}, scanWin, scanFail);
 
   function scanWin(networks) {
     $rootScope.avaiableNetworks = networks;
     console.log($rootScope.avaiableNetworks);
 
-    $scope.targetNetwork = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
-      return avaiableNetworks.SSID === 'Poow';
+    var targetKerk = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
+      return avaiableNetworks.SSID === 'Kerk';
     });
 
-    $scope.test = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
-      return avaiableNetworks.SSID === '12983=12';
+    var targetKerkControl = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
+      return avaiableNetworks.SSID === 'kerk_control';
     });
 
+    var target = '';
 
-    console.log($scope.targetNetwork);
-    console.log($scope.test);
+    if (targetKerkControl.length > 0) {
+      target = 'kerk_control';
+    } else if(targetKerk.length > 0) {
+      target = 'Kerk';
+    } else {
+      target = false;
+    }
+
+    if (target != false) {
+      if(ionic.Platform.isIOS()) {
+        WifiWizard2.iOSConnectNetworkAsync(target, '').then(
+          function(success) {
+            console.log(success);
+            connectWifiWin(success);
+          },
+          function(error) {
+            console.log(error);
+            connectWifiFail(error);
+          }
+        );
+      } else {
+        //WifiWizard2.androidConnectNetwork('kerk_control', connectWifiWin, connectWifiFail);
+        //WifiWizard2.androidConnectNetwork('Kerk', connectWifiWin, connectWifiFail);
+        var androidWifi = WifiWizard2.formatWifiConfig(target, '');
+        
+        WifiWizard2.addNetworkAsync(androidWifi).then(
+          function(success) {
+            console.log(success);
+            $scope.androidConnect(target);
+          },
+          function(error) {
+            console.log(error);
+            $scope.hideBack();
+          }
+        );
+      }
+    } else {
+      $scope.hideBack();
+    }
   }
 
   function scanFail(error) {
     console.log(error);
+    $scope.hideBack();
   }
 
+  $scope.androidConnect = function(target) {
+    WifiWizard2.androidConnectNetworkAsync(target).then(
+      function(success) {
+        console.log(success);
+        connectWifiWin(success);
+      },
+      function(error) {
+        console.log(error);
+        connectWifiFail(error);
+      }
+    );
+  }
+
+  $scope.checkConfig = function() {
+    $timeout(function() {
+      WifiWizard2.scan({}, 
+        function(success){
+          $rootScope.avaiableNetworks = success;
+          console.log($rootScope.avaiableNetworks);
+
+          var targetKerk = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
+            return avaiableNetworks.SSID === 'Kerk';
+          });
+
+          var targetKerkControl = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
+            return avaiableNetworks.SSID === 'kerk_control';
+          });
+
+          var target = '';
+
+          if (targetKerkControl.length > 0) {
+            target = 'kerk_control';
+          } else if(targetKerk.length > 0) {
+            target = 'Kerk';
+          } else {
+            target = false;
+          }
+
+          if(!target) {
+            $scope.done();
+          } else {
+            $ionicLoading.hide();
+            $ionicPopup.alert({
+              title: 'Erro',
+              template: 'O SSID ou a Senha da sua rede estão errados, corrija e tente novamente',
+              okText: 'Ok',
+              okType: 'button-positive'
+            });
+          }
+        },
+        function(error){
+          $scope.hideBack();
+        }
+      );
+    }, 20000);
+  }
+
+  $scope.done = function() {
+    if(ionic.Platform.isIOS()) {
+      WifiWizard2.iOSConnectNetworkAsync($scope.wifi.ssid, $scope.wifi.senha).then(
+        function(success) {
+          $ionicLoading.hide();
+          $state.go('firstSetUpHome');
+        },
+        function(error) {
+          console.log(error);
+        }
+      );
+    } else {
+      WifiWizard2.androidConnectNetworkAsync($scope.wifi.ssid).then(
+        function(success) {
+          $ionicLoading.hide();
+          $state.go('firstSetUpHome');
+        },
+        function(error) {
+          console.log(error);
+        }
+      );
+    }
+  }
 
   //$http({method: 'GET', cache: false, url: 'http://' + ip + '/wifisave?=' + ssid + '&p=' + password});
 
@@ -230,12 +336,27 @@ angular.module('starter.controllers', [])
   };*/
 })
 
-.controller('FirstSetUpHomeCtrl', function($scope, $state, $ionicPopup) {
+.controller('FirstSetUpHomeCtrl', function($scope, $state, $ionicPopup, $ionicLoading) {
+  $ionicLoading.show();
+
   $scope.home = {};
   $scope.places = ['Sala', 'Quarto Casal', 'Quarto Solteiro', 'Cozinha', 'Banheiro'];
   $scope.home.devicePlace = 'Sala';
   $scope.home.name = '';
   $scope.home.deviceName = '';
+
+  document.addEventListener('deviceready', DeviceReady, false);
+
+  function deviceReady() {
+    $http({method: 'GET', cache: false, url: 'http://kerkcontrol/'}).then(
+      function(data) {
+        console.log(data);
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
+  }
 
   /*$scope.setHome = function() {
     console.log($scope.home);

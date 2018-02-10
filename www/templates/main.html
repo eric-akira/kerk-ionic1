@@ -1,5 +1,5 @@
 <ion-view view-title="Home">
-  <ion-content class="background-kerk">
+  <ion-content class="background-kerk has-footer">
     <!--
     <div class="row">
     	<div class="col">
@@ -16,15 +16,9 @@
     	</div>
     </div>
     -->
-    <div class="row" ng-show="!kerk">
-        <div class="col">
-            <button class="button button-block button-balanced" ui-sref="firstSetUp">
-                <ion-icon class="ion-log-in"></ion-icon> Configure seu Kerk Control
-            </button>
-        </div>
-    </div>
+    
     <div class="row">
-        <div class="col-50">
+        <div class="col">
             <div class="list card">
                 <div class="item item-image">
                     <img src="img/quarto-casal.jpg">
@@ -34,7 +28,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-50">
+    </div>
+    <div class="row">
+        <div class="col">
             <div class="list card">
                 <div class="item item-image">
                     <img src="img/quarto-solteiro.jpg">
@@ -46,7 +42,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-50">
+        <div class="col">
             <div class="list card">
                 <div class="item item-image">
                     <img src="img/sala.jpg">
@@ -56,7 +52,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-50">
+    </div>
+    <div class="row">
+        <div class="col">
             <div class="list card">
                 <div class="item item-image">
                     <img src="img/cozinha.jpg">
@@ -68,7 +66,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-50">
+        <div class="col">
             <div class="list card">
                 <div class="item item-image">
                     <img src="img/banheiro.jpg">
@@ -80,4 +78,7 @@
         </div>
     </div>
   </ion-content>
+  <button class="bar bar-footer bar-balanced" ng-show="!kerk" ui-sref="firstSetUp">
+    <div class="title"><ion-icon class="ion-log-in"></ion-icon> Configure seu Kerk Control</div>
+  </button>
 </ion-view>
