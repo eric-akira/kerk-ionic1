@@ -163,7 +163,7 @@ angular.module('starter.controllers', [])
     console.log($rootScope.avaiableNetworks);
 
     var targetKerk = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
-      return avaiableNetworks.SSID === 'Kerk';
+      return avaiableNetworks.SSID === 'Kerk_control';
     });
 
     var targetKerkControl = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
@@ -175,7 +175,7 @@ angular.module('starter.controllers', [])
     if (targetKerkControl.length > 0) {
       target = 'kerk_control';
     } else if(targetKerk.length > 0) {
-      target = 'Kerk';
+      target = 'Kerk_control';
     } else {
       target = false;
     }
@@ -239,7 +239,7 @@ angular.module('starter.controllers', [])
           console.log($rootScope.avaiableNetworks);
 
           var targetKerk = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
-            return avaiableNetworks.SSID === 'Kerk';
+            return avaiableNetworks.SSID === 'Kerk_control';
           });
 
           var targetKerkControl = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
@@ -251,7 +251,7 @@ angular.module('starter.controllers', [])
           if (targetKerkControl.length > 0) {
             target = 'kerk_control';
           } else if(targetKerk.length > 0) {
-            target = 'Kerk';
+            target = 'Kerk_control';
           } else {
             target = false;
           }
@@ -299,6 +299,31 @@ angular.module('starter.controllers', [])
     }
   }
 
+  $scope.teste = function() {
+    $http({method: 'GET', cache: false, url: 'http://192.168.4.1/'}).then(
+      function(data){
+        console.log(data);
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
+  };
+
+  $scope.teste2 = function() {
+    $.ajax({
+      url: 'http://192.168.4.1/',
+      method: 'GET',
+      cache: false
+    })
+    .done(function(data) {
+      console.log(data);
+    })
+    .fail(function(error){
+      console.log(error);
+    });
+  };
+
   //$http({method: 'GET', cache: false, url: 'http://' + ip + '/wifisave?=' + ssid + '&p=' + password});
 
 
@@ -345,7 +370,7 @@ angular.module('starter.controllers', [])
   $scope.home.name = '';
   $scope.home.deviceName = '';
 
-  document.addEventListener('deviceready', DeviceReady, false);
+  document.addEventListener('deviceready', deviceReady, false);
 
   function deviceReady() {
     $http({method: 'GET', cache: false, url: 'http://kerkcontrol/'}).then(
