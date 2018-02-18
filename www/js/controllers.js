@@ -363,6 +363,8 @@ angular.module('starter.controllers', [])
 
 .controller('FirstSetUpHomeCtrl', function($scope, $state, $ionicPopup, $ionicLoading) {
   $ionicLoading.show();
+  
+  //var zeroconf = '';
 
   $scope.home = {};
   $scope.places = ['Sala', 'Quarto Casal', 'Quarto Solteiro', 'Cozinha', 'Banheiro'];
@@ -370,19 +372,106 @@ angular.module('starter.controllers', [])
   $scope.home.name = '';
   $scope.home.deviceName = '';
 
-  document.addEventListener('deviceready', deviceReady, false);
+  $scope.zconf = function() {
+    console.log(cordova.plugins);
+    var zeroconf = cordova.plugins.zeroconf;
 
-  function deviceReady() {
-    $http({method: 'GET', cache: false, url: 'http://kerkcontrol/'}).then(
+    zeroconf.reInit(zconfS, zconfF);
+    //zeroconf.registerAddressFamily = 'ipv4';
+    //zeroconf.watchAddressFamily = 'ipv4';
+  };
+
+  function zconfS(success) {
+    console.log(success);
+    console.log('yeah');
+
+    var zeroconf = cordova.plugins.zeroconf;
+
+    zeroconf.registerAddressFamily = 'ipv4';
+    zeroconf.watchAddressFamily = 'ipv4';
+
+    //$ionicLoading.hide();
+
+    zeroconf.watch('_http._tcp.', 'local.', function(result) {
+      var action = result.action;
+      var service = result.service;
+      if (action == 'added') {
+          console.log('service added', service);
+          $ionicLoading.hide();
+      } else if (action == 'resolved') {
+          console.log('service resolved', service);
+          $ionicLoading.hide();
+          /* service : {
+          'domain' : 'local.',
+          'type' : '_http._tcp.',
+          'name': 'Becvert\'s iPad',
+          'port' : 80,
+          'hostname' : 'ipad-of-becvert.local',
+          'ipv4Addresses' : [ '192.168.1.125' ], 
+          'ipv6Addresses' : [ '2001:0:5ef5:79fb:10cb:1dbf:3f57:feb0' ],
+          'txtRecord' : {
+              'foo' : 'bar'
+          } */
+      } else {
+          console.log('service removed', service);
+          $ionicLoading.hide();
+      }
+    });
+  }
+
+  function zconfF(fail) {
+    console.log(fail);
+    console.log('aff');
+    $ionicLoading.hide();
+  }
+
+  document.addEventListener('deviceready', DeviceReady, false);
+
+  function DeviceReady() {
+    /*$http({method: 'GET', cache: false, url: 'http://kerkcontrol/'}).then(
       function(data) {
         console.log(data);
       },
       function(error) {
         console.log(error);
       }
-    );
+    );*/
+    
+    //zeroconf.registerAddressFamily = 'ipv4';
+    //zeroconf.watchAddressFamily = 'ipv4';
+    //console.log(zeroconf);
+
+    $scope.zconf();
+    /*zeroconf.watch('_http._tcp.', 'local.', function(result) {
+        var action = result.action;
+        var service = result.service;
+        if (action == 'added') {
+            console.log('service added', service);
+            $ionicLoading.hide();
+        } else if (action == 'resolved') {
+            console.log('service resolved', service);
+            $ionicLoading.hide();
+            /* service : {
+            'domain' : 'local.',
+            'type' : '_http._tcp.',
+            'name': 'Becvert\'s iPad',
+            'port' : 80,
+            'hostname' : 'ipad-of-becvert.local',
+            'ipv4Addresses' : [ '192.168.1.125' ], 
+            'ipv6Addresses' : [ '2001:0:5ef5:79fb:10cb:1dbf:3f57:feb0' ],
+            'txtRecord' : {
+                'foo' : 'bar'
+            } */
+        /*} else {
+            console.log('service removed', service);
+            $ionicLoading.hide();
+        }
+    });*/
   }
 
+  
+
+  
   /*$scope.setHome = function() {
     console.log($scope.home);
     var name = $scope.home.name;
