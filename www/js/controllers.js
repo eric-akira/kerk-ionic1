@@ -22,6 +22,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('FirstSetUpCtrl', function($scope, $ionicLoading, $ionicPopup, $state, $rootScope) {
+  $ionicLoading.show();
   document.addEventListener('deviceready', DeviceReady, false);
 
   function DeviceReady() {
@@ -30,10 +31,12 @@ angular.module('starter.controllers', [])
 
   function connectedSSIDWin(ssid) {
     $rootScope.currentSSID = ssid;
+    $ionicLoading.hide();
   }
 
   function connectedSSIDFail(error) {
     $rootScope.currentSSID = '';
+    $ionicLoading.hide();
   }
 
 
@@ -105,7 +108,7 @@ angular.module('starter.controllers', [])
   document.addEventListener('deviceready', deviceReady, false);
 
   $scope.wifi = {
-    ssid: $rootScope.currentSSID,
+    ssid: '',
     senha: ''
   };
 
@@ -133,7 +136,9 @@ angular.module('starter.controllers', [])
   }
 
   function deviceReady() {
-    WifiWizard2.scan({}, scanWin, scanFail);
+    if($rootScope.currentSSID != 'Kerk_control' && $rootScope.currentSSID != 'kerk_control') {
+      WifiWizard2.scan({}, scanWin, scanFail);
+    }
   }
 
   $scope.setWiFi = function() {
@@ -290,6 +295,7 @@ angular.module('starter.controllers', [])
       WifiWizard2.androidConnectNetworkAsync($scope.wifi.ssid).then(
         function(success) {
           $ionicLoading.hide();
+          window.localStorage.setItem('kerk.configStatus', 'FirstSetUpHome');
           $state.go('firstSetUpHome');
         },
         function(error) {
@@ -361,10 +367,9 @@ angular.module('starter.controllers', [])
   };*/
 })
 
-.controller('FirstSetUpHomeCtrl', function($scope, $state, $ionicPopup, $ionicLoading) {
+.controller('FirstSetUpHomeCtrl', function($scope, $state, $ionicPopup, $ionicLoading, KerkCentralService, CommandService) {
   $ionicLoading.show();
-  
-  //var zeroconf = '';
+  window.localStorage.setItem('kerk.configStatus', 'FirstSetUpHome');
 
   $scope.home = {};
   $scope.places = ['Sala', 'Quarto Casal', 'Quarto Solteiro', 'Cozinha', 'Banheiro'];
@@ -372,107 +377,126 @@ angular.module('starter.controllers', [])
   $scope.home.name = '';
   $scope.home.deviceName = '';
 
-  $scope.zconf = function() {
-    console.log(cordova.plugins);
-    var zeroconf = cordova.plugins.zeroconf;
-
-    zeroconf.reInit(zconfS, zconfF);
-    //zeroconf.registerAddressFamily = 'ipv4';
-    //zeroconf.watchAddressFamily = 'ipv4';
+  $scope.tryCount = 1;
+  $scope.retryLimit = 254;
+  
+  $scope.myIp = '';
+  $scope.kerk = {
+    ip: '',
+    id: '',
+    type: ''
   };
 
-  function zconfS(success) {
-    console.log(success);
-    console.log('yeah');
+  $scope.getIp = function(ip) {
+    KerkCentralService.scanIp($scope.myIp + $scope.tryCount + '/').then(
+      function(data) {
+        if (data.status == 200 && (data.data == 'Kerk')) {
+          $scope.kerk.ip = $scope.myIp + $scope.tryCount;
+          window.localStorage.setItem('kerk.kerk.ip', $scope.kerk.ip);
+          $scope.listDevice();
+        }
+        else {
+          $scope.tryCount++;
+          if($scope.tryCount <= $scope.retryLimit) {
+            $scope.getIp($scope.myIp);
+          } else {
+            $ionicLoading.hide();
+            $scope.tryCount = 0;
+            $scope.retryLimit = 254;
 
-    var zeroconf = cordova.plugins.zeroconf;
-
-    zeroconf.registerAddressFamily = 'ipv4';
-    zeroconf.watchAddressFamily = 'ipv4';
-
-    //$ionicLoading.hide();
-
-    zeroconf.watch('_http._tcp.', 'local.', function(result) {
-      var action = result.action;
-      var service = result.service;
-      if (action == 'added') {
-          console.log('service added', service);
+            $ionicPopup.alert({
+              title: 'Ops!',
+              template: 'Tenha certeza que você está na sua rede Local.',
+              okText: 'Ok',
+              okType: 'button-positive'
+            }).then(function(res) {
+              $state.go('app.main');
+            });
+          }
+        }
+      },
+      function(error) {
+        $scope.tryCount++;
+        if($scope.tryCount <= $scope.retryLimit) {
+          $scope.getIp($scope.myIp);
+        } else {
           $ionicLoading.hide();
-      } else if (action == 'resolved') {
-          console.log('service resolved', service);
-          $ionicLoading.hide();
-          /* service : {
-          'domain' : 'local.',
-          'type' : '_http._tcp.',
-          'name': 'Becvert\'s iPad',
-          'port' : 80,
-          'hostname' : 'ipad-of-becvert.local',
-          'ipv4Addresses' : [ '192.168.1.125' ], 
-          'ipv6Addresses' : [ '2001:0:5ef5:79fb:10cb:1dbf:3f57:feb0' ],
-          'txtRecord' : {
-              'foo' : 'bar'
-          } */
-      } else {
-          console.log('service removed', service);
-          $ionicLoading.hide();
+          $scope.tryCount = 0;
+          $scope.retryLimit = 254;
+
+          $ionicPopup.alert({
+            title: 'Ops!',
+            template: 'Tenha certeza que você está na sua rede Local.',
+            okText: 'Ok',
+            okType: 'button-positive'
+          }).then(function(res) {
+            $state.go('app.main');
+          });
+        }
       }
-    });
+    );
+  };
+
+  $scope.listDevice = function() {
+    CommandService.list($scope.kerk.ip).then(
+      function(success) {
+        $scope.kerk.id = success.data.n0;
+        $scope.infoDevice();
+      },
+      function(error) {
+        $ionicLoading.hide();
+
+        $ionicPopup.alert({
+          title: 'Ops!',
+          template: 'Tenha certeza que você está na sua rede Local.',
+          okText: 'Ok',
+          okType: 'button-positive'
+        }).then(function(res) {
+          $state.go('app.main');
+        });
+      }
+    );
   }
 
-  function zconfF(fail) {
-    console.log(fail);
-    console.log('aff');
-    $ionicLoading.hide();
+  $scope.infoDevice = function() {
+    CommandService.info($scope.kerk.ip, $scope.kerk.id).then(
+      function(success) {
+        $scope.kerk.type = success.data.INFO;
+
+        console.log($scope.kerk);
+        $ionicLoading.hide();
+      },
+      function(error) {
+        $ionicLoading.hide();
+
+        $ionicPopup.alert({
+          title: 'Ops!',
+          template: 'Tenha certeza que você está na sua rede Local.',
+          okText: 'Ok',
+          okType: 'button-positive'
+        }).then(function(res) {
+          $state.go('app.main');
+        });
+      }
+    );
   }
 
   document.addEventListener('deviceready', DeviceReady, false);
 
   function DeviceReady() {
-    /*$http({method: 'GET', cache: false, url: 'http://kerkcontrol/'}).then(
-      function(data) {
-        console.log(data);
+    networkinterface.getIPAddress(
+      function (ip, subnet) { 
+        $scope.myIp = KerkCentralService.formatIpForScan(ip);
+        $scope.getIp($scope.myIp);
       },
-      function(error) {
-        console.log(error);
+      function (error) {
+        console.log('Erro: ' + error);
+        $scope.myIp = false;
       }
-    );*/
-    
-    //zeroconf.registerAddressFamily = 'ipv4';
-    //zeroconf.watchAddressFamily = 'ipv4';
-    //console.log(zeroconf);
-
-    $scope.zconf();
-    /*zeroconf.watch('_http._tcp.', 'local.', function(result) {
-        var action = result.action;
-        var service = result.service;
-        if (action == 'added') {
-            console.log('service added', service);
-            $ionicLoading.hide();
-        } else if (action == 'resolved') {
-            console.log('service resolved', service);
-            $ionicLoading.hide();
-            /* service : {
-            'domain' : 'local.',
-            'type' : '_http._tcp.',
-            'name': 'Becvert\'s iPad',
-            'port' : 80,
-            'hostname' : 'ipad-of-becvert.local',
-            'ipv4Addresses' : [ '192.168.1.125' ], 
-            'ipv6Addresses' : [ '2001:0:5ef5:79fb:10cb:1dbf:3f57:feb0' ],
-            'txtRecord' : {
-                'foo' : 'bar'
-            } */
-        /*} else {
-            console.log('service removed', service);
-            $ionicLoading.hide();
-        }
-    });*/
+    );
   }
-
   
-
-  
-  /*$scope.setHome = function() {
+  $scope.setHome = function() {
     console.log($scope.home);
     var name = $scope.home.name;
     var devicePlace = $scope.home.devicePlace;
@@ -492,51 +516,55 @@ angular.module('starter.controllers', [])
     var nameArray = [];
     var devicePlaceArray = [];
     var deviceNameArray = [];
+    var devicesIdsArray = [];
     nameArray.push(name);
     devicePlaceArray.push(devicePlace);
     deviceNameArray.push(deviceName);
+    devicesIdsArray.push($scope.kerk.id);
 
     var kerk = {
       homeList: nameArray,
+      currentHome: name,
+      devicesIds: devicesIdsArray,
       [name]: {
+        homeIp: $scope.kerk.ip,
         placeList: devicePlaceArray,
         [devicePlace]: {
           deviceList: deviceNameArray,
           [deviceName]: {
-            id: 1234,
-            buttonList: ['b1','b2','b3'],
-            b1: {
-              id: 1,
-              status: 'on',
-              statusBtnClass: 'device-on',
-              statusTxtClass: 'color-blue',
-              statusText: 'Ligado'
-            },
-            b2: {
-              id: 2,
-              status: 'on',
-              statusBtnClass: 'device-on',
-              statusTxtClass: 'color-blue',
-              statusText: 'Ligado'
-            },
-            b3: {
-              id: 3,
-              status: 'on',
-              statusBtnClass: 'device-on',
-              statusTxtClass: 'color-blue',
-              statusText: 'Ligado'
-            }
+            id: $scope.kerk.id
           }
         }
       }
     };
 
+    if($scope.kerk.type == 'LUZ 1') {
+      kerk[name][devicePlace][deviceName].buttonList = ['b1'];
+    } else if ($scope.kerk.type == 'LUZ 2') {
+      kerk[name][devicePlace][deviceName].buttonList = ['b1', 'b2'];
+    } else if ($scope.kerk.type == 'LUZ 3') {
+      kerk[name][devicePlace][deviceName].buttonList = ['b1', 'b2', 'b3'];
+    }
+
+    var count = 1;
+    angular.forEach(kerk[name][devicePlace][deviceName].buttonList, function(value,key) {
+      kerk[name][devicePlace][deviceName][value] = {
+        id: count,
+        status: 'on',
+        statusBtnClass: 'device-on',
+        statusTxtClass: 'color-blue',
+        statusText: 'Ligado'
+      };
+      count++;
+    });
+
+    console.log(kerk);
     kerk = angular.toJson(kerk);
     window.localStorage.setItem('kerk.save', kerk);
-    window.localStorage.setItem('kerk.initial', 'second');
+    window.localStorage.setItem('kerk.configStatus', 'completo');
 
     $state.go('firstSetUpEnd');
-  };*/
+  };
 })
 
 .controller('SecondSetUpCtrl', function($scope, $ionicLoading, KerkCentralService, $state) {
@@ -663,21 +691,36 @@ angular.module('starter.controllers', [])
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 })
 
-.controller('MainCtrl', function($scope, $state, $ionicPopup) {
+.controller('MainCtrl', function($scope, $state, $ionicPopup, $rootScope) {
 
-  $scope.kerk = window.localStorage.getItem('kerk.save');
-  console.log($scope.kerk);
+  $scope.$on('$ionicView.enter', function(e) {
+    $rootScope.kerk = window.localStorage.getItem('kerk.save');
+    $scope.configStatus = window.localStorage.getItem('kerk.configStatus');
 
-  if($scope.kerk) {
-    console.log('configurado');
-    $scope.kerk = angular.fromJson($scope.kerk);
-  } else{
-    console.log('vazio...');
-    //$scope.kerk = {};
-  }
+    if($rootScope.kerk) {
+      $rootScope.kerk = angular.fromJson($rootScope.kerk);
+      $rootScope.currentHome = $rootScope.kerk.currentHome;
+      //$scope.currentHome = $rootScope.currentHome;
+      console.log($rootScope.kerk);
+      $scope.inConfig = false;
 
-  
-  
+      $scope.placeList = $rootScope.kerk[$rootScope.kerk.currentHome].placeList;
+    } else{
+      //$scope.kerk = {};
+      $scope.inConfig = true;
+      //$rootScope.currentHome = 'Home';
+      //$scope.currentHome = $rootScope.currentHome;
+    }
+  });
+
+  $scope.goConfig = function() {
+    if ($scope.configStatus == 'FirstSetUpHome') {
+      $state.go('firstSetUpHome');
+    } else {
+      $state.go('firstSetUp');
+    }
+  };
+
   /*$scope.kerk = angular.fromJson($scope.kerk);
 
   $scope.currentHome = window.localStorage.getItem('kerk.currentHome');

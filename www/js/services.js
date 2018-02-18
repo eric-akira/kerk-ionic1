@@ -11,7 +11,7 @@ angular.module('starter.services', [])
 	}
 
 	this.scanIp = function(target) {
-		return $http({method: 'GET', cache: false, url: 'http://' + target});
+		return $http({method: 'GET', cache: false, url: 'http://' + target, timeout: 500});
 	}
 
 	this.formatSSIDList = function(string) {
@@ -37,6 +37,14 @@ angular.module('starter.services', [])
 
 .service('CommandService', ['$http', function($http) {
 	//http://192.168.1.42/comando?ID=1234&lamp=1&status=on
+
+	this.list = function(ip) {
+		return $http({method: 'GET', cache: false, url: 'http://' + ip + '/comando?LIST=1'});
+	}
+
+	this.info = function(ip, did) {
+		return $http({method: 'GET', cache: false, url: 'http://' + ip + '/comando?ID=' + did + '&INFO=1'});
+	}
 
 	this.changeStatus = function(ip, did, lid, status) {
 		return $http({method: 'GET', cache: false, url: 'http://' + ip + '/comando?ID=' + did + '&lamp=' + lid + '&status=' + status});

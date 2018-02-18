@@ -1,5 +1,5 @@
-<ion-view view-title="Home">
-  <ion-content class="background-kerk has-footer">
+<ion-view view-title="{{currentHome}}">
+  <ion-content class="background-kerk" ng-class="{'has-footer': inConfig}">
     <!--
     <div class="row">
     	<div class="col">
@@ -17,6 +17,38 @@
     </div>
     -->
     
+    <div ng-show="!inConfig">
+        <div class="row" ng-repeat="place in placeList track by $index">
+            <div class="col">
+                <div class="list card" ng-click="goPlaceControl(place)">
+                    <div class="item item-image">
+                        <img ng-if="place == 'Quarto Casal'" src="img/quarto-casal.jpg">
+                        <img ng-if="place == 'Quarto Solteiro'" src="img/quarto-solteiro.jpg">
+                        <img ng-if="place == 'Sala'" src="img/sala.jpg">
+                        <img ng-if="place == 'Cozinha'" src="img/cozinha.jpg">
+                        <img ng-if="place == 'Banheiro'" src="img/banheiro.jpg">
+                    </div>
+                    <div class="item item-divider">
+                        <ion-icon class="ion-grid"></ion-icon> {{place}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="inConfig">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="item item-text-wrap">
+                        Configure seu Kerk Control tocando no botão verde no rodapé do aplicativo.<br><br>
+                        Caso já exista um Kerk Control configurado em sua residência, <a ui-sref="firstSetUpHome">clique aqui.</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
     <div class="row">
         <div class="col">
             <div class="list card" ui-sref="placeControl">
@@ -77,8 +109,9 @@
             </div>
         </div>
     </div>
+    -->
   </ion-content>
-  <button class="bar bar-footer bar-balanced" ng-show="!kerk" ui-sref="firstSetUp">
+  <button class="bar bar-footer bar-balanced" ng-show="inConfig" ng-click="goConfig()">
     <div class="title"><ion-icon class="ion-log-in"></ion-icon> Configure seu Kerk Control</div>
   </button>
 </ion-view>

@@ -1,0 +1,40 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.kerk.kerkcontrol"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.kerk.kerkcontrol"
+        },
+        "cordova-plugin-networkinterface": {
+            "PACKAGE_NAME": "com.kerk.kerkcontrol"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.kerk.kerkcontrol"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.kerk.kerkcontrol"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.kerk.kerkcontrol"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "com.kerk.kerkcontrol"
+        },
+        "wifiwizard2": {
+            "PACKAGE_NAME": "com.kerk.kerkcontrol"
+        }
+    },
+    "dependent_plugins": {
+        "es6-promise-plugin": {
+            "PACKAGE_NAME": "com.kerk.kerkcontrol"
+        }
+    }
+}
