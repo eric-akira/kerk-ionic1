@@ -369,7 +369,7 @@ angular.module('starter.controllers', [])
 
 .controller('FirstSetUpHomeCtrl', function($scope, $state, $ionicPopup, $ionicLoading, KerkCentralService, CommandService) {
   $ionicLoading.show();
-  window.localStorage.setItem('kerk.configStatus', 'FirstSetUpHome');
+  //window.localStorage.setItem('kerk.configStatus', 'FirstSetUpHome');
 
   $scope.home = {};
   $scope.places = ['Sala', 'Quarto Casal', 'Quarto Solteiro', 'Cozinha', 'Banheiro'];
@@ -479,7 +479,7 @@ angular.module('starter.controllers', [])
         });
       }
     );
-  }
+  };
 
   document.addEventListener('deviceready', DeviceReady, false);
 
@@ -497,7 +497,6 @@ angular.module('starter.controllers', [])
   }
   
   $scope.setHome = function() {
-    console.log($scope.home);
     var name = $scope.home.name;
     var devicePlace = $scope.home.devicePlace;
     var deviceName = $scope.home.deviceName;
@@ -691,7 +690,29 @@ angular.module('starter.controllers', [])
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 })
 
-.controller('MainCtrl', function($scope, $state, $ionicPopup, $rootScope) {
+.controller('MainCtrl', function($scope, $state, $ionicPopup, $rootScope, CommandService) {
+  $scope.scanNewDevice = function() {
+    var ip = $rootScope.currentIp;
+    CommandService.list(ip).then(
+      function(success) {
+        angular.forEach(success.data, function(value, key) {
+          var checkDeviceId = $rootScope.kerk.devicesIds.filter(function(device){
+            return device === value;
+          });
+
+          if(checkDeviceId.length == 0) {
+            console.log('new: ' + value);
+            $scope.newDevice = true;
+            $rootScope.newDeviceId = value;
+          }
+        });
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
+  };
+
   $scope.$on('$ionicView.enter', function(e) {
     $rootScope.kerk = window.localStorage.getItem('kerk.save');
     $scope.configStatus = window.localStorage.getItem('kerk.configStatus');
@@ -701,10 +722,14 @@ angular.module('starter.controllers', [])
       $rootScope.currentHome = $rootScope.kerk.currentHome;
       $rootScope.currentIp = $rootScope.kerk[$rootScope.currentHome].homeIp;
       $scope.inConfig = false;
+      $scope.newDevice = false;
 
       $scope.placeList = $rootScope.kerk[$rootScope.currentHome].placeList;
+      $scope.scanNewDevice();
     } else{
       $scope.inConfig = true;
+      $scope.newDevice = false;
+      $rootScope.currentHome = 'Home';
     }
   });
 
@@ -714,6 +739,10 @@ angular.module('starter.controllers', [])
     } else {
       $state.go('firstSetUp');
     }
+  };
+
+  $scope.goDeviceConfig = function() {
+    $state.go('newDevice');
   };
 
   $scope.goPlaceControl = function(place) {
@@ -919,6 +948,123 @@ angular.module('starter.controllers', [])
       $ionicHistory.goBack();
     });
   }
+})
+
+.controller('NewDeviceCtrl', function($scope, $state, $ionicPopup, $ionicLoading, KerkCentralService, CommandService, $rootScope) {
+  $scope.home = {};
+  $scope.places = ['Sala', 'Quarto Casal', 'Quarto Solteiro', 'Cozinha', 'Banheiro'];
+  $scope.home.devicePlace = 'Sala';
+  $scope.home.deviceName = '';
+
+  $scope.infoDevice = function() {
+    var ip = $rootScope.currentIp;
+    var id = $rootScope.newDeviceId;
+
+    CommandService.info(ip, id).then(
+      function(success) {
+        $scope.type = success.data.INFO;
+        console.log($scope.type);
+        $ionicLoading.hide();
+      },
+      function(error) {
+        $ionicLoading.hide();
+
+        $ionicPopup.alert({
+          title: 'Ops!',
+          template: 'Tenha certeza que você está na sua rede Local.',
+          okText: 'Ok',
+          okType: 'button-positive'
+        }).then(function(res) {
+          $state.go('app.main');
+        });
+      }
+    );
+  };
+
+  $scope.$on('$ionicView.enter', function(e) {
+    $ionicLoading.show();
+    $scope.infoDevice();
+  });
+
+
+  $scope.setNewDevice = function() {
+    console.log($rootScope.kerk);
+    //return false;
+
+    var devicePlace = $scope.home.devicePlace;
+    var deviceName = $scope.home.deviceName;
+
+    if(devicePlace == '' || deviceName == '') {
+      $ionicPopup.alert({
+        title: 'Ops!',
+        template: 'Preencha todos os dados antes de prosseguir',
+        okText: 'Ok',
+        okType: 'button-positive'
+      });
+
+      return;
+    }
+
+    if($rootScope.kerk[$rootScope.currentHome].placeList.indexOf(devicePlace) == -1) {
+      $rootScope.kerk[$rootScope.currentHome].placeList.push(devicePlace);
+      $rootScope.kerk[$rootScope.currentHome][devicePlace] = {};
+      $rootScope.kerk[$rootScope.currentHome][devicePlace].deviceList = [];
+      $rootScope.kerk[$rootScope.currentHome][devicePlace].deviceList.push(deviceName);
+    } else {
+      if($rootScope.kerk[$rootScope.currentHome][devicePlace].deviceList.indexOf(deviceName) > -1) {
+        $ionicPopup.alert({
+          title: 'Ops!',
+          template: 'Já existe um Dispositivo com este nome no mesmo Local.',
+          okText: 'Ok',
+          okType: 'button-positive'
+        });
+
+        return;
+      } else {
+        $rootScope.kerk[$rootScope.currentHome][devicePlace].deviceList.push(deviceName);
+      }
+    }
+
+    $rootScope.kerk.devicesIds.push($rootScope.newDeviceId);
+
+    $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName] = {};
+    $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].id = $rootScope.newDeviceId;
+
+    if($scope.type == 'LUZ 1') {
+      $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].buttonList = ['b1'];
+    } else if ($scope.type == 'LUZ 2') {
+      $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].buttonList = ['b1', 'b2'];
+    } else if ($scope.type == 'LUZ 3') {
+      $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].buttonList = ['b1', 'b2', 'b3'];
+    }
+
+    var count = 1;
+    angular.forEach($rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].buttonList, function(value,key) {
+      $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName][value] = {
+        id: count,
+        status: 'on',
+        statusBtnClass: 'device-on',
+        statusTxtClass: 'color-blue',
+        statusText: 'Ligado'
+      };
+      count++;
+    });
+
+    console.log($rootScope.kerk);
+    //return false;
+
+    var kerk = angular.toJson($rootScope.kerk);
+    window.localStorage.setItem('kerk.save', kerk);
+
+    $ionicPopup.alert({
+      title: 'Sucesso!',
+      template: 'Novo Dispositivo Configurado!',
+      okText: 'Ok',
+      okType: 'button-positive'
+    }).then(function(res) {
+      $state.go('app.main');
+    });
+  };
 })
 
 .controller('TestesCtrl', function($scope, $ionicLoading){

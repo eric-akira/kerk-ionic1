@@ -155,6 +155,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
+  .state('newDevice', {
+    url: '/newDevice/',
+    cache: false,
+    templateUrl: 'templates/newDevice.html',
+    controller: 'NewDeviceCtrl'
+  })
+
   .state('app.testes', {
     url: '/testes',
     views: {

@@ -1,5 +1,5 @@
 <ion-view view-title="{{currentHome}}">
-  <ion-content class="background-kerk" ng-class="{'has-footer': inConfig}">
+  <ion-content class="background-kerk" ng-class="{'has-footer': inConfig || newDevice}">
     <!--
     <div class="row">
     	<div class="col">
@@ -113,5 +113,8 @@
   </ion-content>
   <button class="bar bar-footer bar-balanced" ng-show="inConfig" ng-click="goConfig()">
     <div class="title"><ion-icon class="ion-log-in"></ion-icon> Configure seu Kerk Control</div>
+  </button>
+  <button class="bar bar-footer bar-balanced" ng-show="newDevice" ng-click="goDeviceConfig()">
+    <div class="title"><ion-icon class="ion-log-in"></ion-icon> Novo Kerk encontrado, Configure!</div>
   </button>
 </ion-view>
