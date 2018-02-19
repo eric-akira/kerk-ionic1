@@ -692,7 +692,6 @@ angular.module('starter.controllers', [])
 })
 
 .controller('MainCtrl', function($scope, $state, $ionicPopup, $rootScope) {
-
   $scope.$on('$ionicView.enter', function(e) {
     $rootScope.kerk = window.localStorage.getItem('kerk.save');
     $scope.configStatus = window.localStorage.getItem('kerk.configStatus');
@@ -700,16 +699,12 @@ angular.module('starter.controllers', [])
     if($rootScope.kerk) {
       $rootScope.kerk = angular.fromJson($rootScope.kerk);
       $rootScope.currentHome = $rootScope.kerk.currentHome;
-      //$scope.currentHome = $rootScope.currentHome;
-      console.log($rootScope.kerk);
+      $rootScope.currentIp = $rootScope.kerk[$rootScope.currentHome].homeIp;
       $scope.inConfig = false;
 
-      $scope.placeList = $rootScope.kerk[$rootScope.kerk.currentHome].placeList;
+      $scope.placeList = $rootScope.kerk[$rootScope.currentHome].placeList;
     } else{
-      //$scope.kerk = {};
       $scope.inConfig = true;
-      //$rootScope.currentHome = 'Home';
-      //$scope.currentHome = $rootScope.currentHome;
     }
   });
 
@@ -720,6 +715,12 @@ angular.module('starter.controllers', [])
       $state.go('firstSetUp');
     }
   };
+
+  $scope.goPlaceControl = function(place) {
+    console.log($rootScope.currentHome);
+    $rootScope.currentPlace = place;
+    $state.go('placeControl');
+  }
 
   /*$scope.kerk = angular.fromJson($scope.kerk);
 
@@ -755,49 +756,140 @@ angular.module('starter.controllers', [])
   }*/
 })
 
-.controller('PlaceControlCtrl', function($scope, $stateParams, $state) {
-  /*$scope.currentPlace = angular.fromJson($stateParams.place);
-  $scope.parent = $stateParams.parent;
+.controller('PlaceControlCtrl', function($scope, $stateParams, $state, $rootScope, $ionicLoading, CommandService) {
+  $ionicLoading.show();
+
+  $scope.getDeviceStatus = function(){
+    var ip = $rootScope.currentIp;
+    //var id = $rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][device].id;
+
+    angular.forEach($scope.deviceList, function(value,key){
+      console.log(value);
+      console.log(key);
+
+      var id = $rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][value.name].id;
+
+      angular.forEach($rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][value.name].buttonList, function(valor,chave){
+        var lid = $rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][value.name][valor].id;
+
+        CommandService.getStatus(ip, id, lid).then(
+          function(success){
+            console.log(lid, success.data.STATUS);
+
+            if(success.data.STATUS == 'ON') {
+              $scope.deviceList[key].on = true;
+            }
+          },
+          function(error){
+
+          }
+        );
+      });
+    });
+
+    $ionicLoading.hide();
+  };
+
+  $scope.$on('$ionicView.enter', function(e) {
+
+    $scope.deviceList = [];
+
+    angular.forEach($rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace].deviceList, function(value,key){
+      $scope.deviceList.push({
+        name: value,
+        on: false
+      });
+    });
+
+    $scope.getDeviceStatus();
+  });
 
   $scope.goDeviceControl = function(device) {
-    var deviceObj = $scope.currentPlace[device];
-    deviceObj.ownName = device;
+    $rootScope.currentDevice = device.name;
+    $state.go('deviceControl');
+  };
 
-    $state.go('app.deviceControl', {
-      device: angular.toJson(deviceObj),
-      parent: $scope.currentPlace.ownName
-    });
-  };*/
 })
 
-.controller('DeviceControlCtrl', function($scope, $stateParams, CommandService, $ionicLoading, $ionicPopup, $interval) {
-  /*$ionicLoading.show();
+.controller('DeviceControlCtrl', function($scope, $stateParams, CommandService, $ionicLoading, $ionicPopup, $interval, $rootScope) {
+  
+  $ionicLoading.show();
   var promiseGetStatus;
+  
+  function getStatus(first) {
+    //console.log(first);
 
-  $scope.currentDevice = angular.fromJson($stateParams.device);
-  $scope.parent = $stateParams.parent;
+    //console.log(typeof first);
 
-  $scope.buttons = [];
 
-  angular.forEach($scope.currentDevice.buttonList, function(value,key) {
-    this.push($scope.currentDevice[value]);
-  }, $scope.buttons);
+    var ip = $rootScope.currentIp;
+    var id = $rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][$rootScope.currentDevice].id;
 
-  console.log($scope.buttons);
+    angular.forEach($scope.buttons, function(value,key) {
+      CommandService.getStatus(ip, id, value.id).then(
+        function(data) {
+          //console.log('getting status...');
+          //console.log(data);
+
+          value.status = data.data.STATUS;
+          value.statusBtnClass = (value.status == 'OFF') ? 'device-off' : 'device-on';
+          value.statusTxtClass = (value.status == 'OFF') ? 'color-grey' : 'color-blue';
+          value.statusText = (value.status == 'OFF') ? 'Desligado' : 'Ligado';
+        },
+        function(error) {
+          //erro...
+        }
+      );
+    });
+
+    if(typeof first == 'boolean') {
+      console.log('what?');
+      $ionicLoading.hide();
+    }
+  }
+
+  $scope.$on('$ionicView.enter', function(e) {
+    console.log($rootScope.kerk);
+    console.log($rootScope.currentDevice);
+    console.log($rootScope.currentPlace);
+    console.log($rootScope.currentHome);
+    console.log($rootScope.currentIp);
+
+    $scope.buttons = [];
+
+    angular.forEach($rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][$rootScope.currentDevice].buttonList, function(value,key){
+      $scope.buttons.push($rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][$rootScope.currentDevice][value]);
+    });
+
+    console.log($scope.buttons);
+
+    getStatus(true);
+  });
+
+  promiseGetStatus = $interval(getStatus, 1000);
+
+  $scope.$on('$destroy', function() {
+    $interval.cancel(promiseGetStatus);
+  });
 
   $scope.changeStatus = function(object) {
     $ionicLoading.show();
-    var newStatus = (object.status == 'on') ? 'off' : 'on';
 
-    CommandService.changeStatus($scope.currentDevice.ip, $scope.currentDevice.id, object.id, newStatus).then(
+    var ip = $rootScope.currentIp;
+    var id = $rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][$rootScope.currentDevice].id;
+
+    var newStatus = (object.status == 'ON') ? 'OFF' : 'ON';
+
+    CommandService.changeStatus(ip, id, object.id, newStatus).then(
       function(data) {
         $ionicLoading.hide();
-        console.log(data);
-        if(data.status == '200' && data.data == 'ok') {
+        //console.log('changing status...');
+        //console.log(data);
+        if(data.status == '200' && data.data.STATUS == newStatus) {
           object.status = newStatus;
           object.statusBtnClass = (object.statusBtnClass == 'device-on') ? 'device-off' : 'device-on';
           object.statusTxtClass = (object.statusTxtClass == 'color-blue') ? 'color-grey' : 'color-blue';
-          object.statusText = (object.statusText == 'Ligado') ? 'Desligado' : 'Ligado';
+          object.statusText = (object.statusText == 'Ligado') ? 'Desligado' : 'Ligado';   
         } 
       },
       function(error) {
@@ -809,35 +901,9 @@ angular.module('starter.controllers', [])
           okType: 'button-positive'
         });
       }
-    );  
+    );
   };
-
-  function getStatus() {
-    angular.forEach($scope.buttons, function(value,key) {
-      console.log(value);
-      CommandService.getStatus($scope.currentDevice.ip, $scope.currentDevice.id, value.id).then(
-        function(data) {
-          value.status = data.data;
-          value.statusBtnClass = (value.status == 'off') ? 'device-off' : 'device-on';
-          value.statusTxtClass = (value.status == 'off') ? 'color-grey' : 'color-blue';
-          value.statusText = (value.status == 'off') ? 'Desligado' : 'Ligado';
-        },
-        function(error) {
-          //erro...
-        }
-      );
-    });
-    $ionicLoading.hide();
-  }
-
-  getStatus();
-
-  promiseGetStatus = $interval(getStatus, 1000);
-
-  $scope.$on('$destroy', function() {
-    console.log('destoyed');
-    $interval.cancel(promiseGetStatus);
-  });*/
+  
 })
 
 .controller('ConfigCtrl', function($scope, $ionicPopup, $ionicHistory) {

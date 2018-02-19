@@ -47,11 +47,11 @@ angular.module('starter.services', [])
 	}
 
 	this.changeStatus = function(ip, did, lid, status) {
-		return $http({method: 'GET', cache: false, url: 'http://' + ip + '/comando?ID=' + did + '&lamp=' + lid + '&status=' + status});
+		return $http({method: 'GET', cache: false, url: 'http://' + ip + '/comando?ID=' + did + '&LAMP=' + lid + '&STATUS=' + status});
 	}
 
 	this.getStatus = function(ip, did, lid) {
-		return $http({method: 'GET', cache: false, url: 'http://' + ip + '/comando?ID=' + did + '&lamp=' + lid + '&status=?'});
+		return $http({method: 'GET', cache: false, url: 'http://' + ip + '/comando?ID=' + did + '&LAMP=' + lid + '&STATUS=?'});
 	}
 }])
 

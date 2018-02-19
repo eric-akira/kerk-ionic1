@@ -1,7 +1,7 @@
-<ion-view view-title="Quarto Casal">
+<ion-view view-title="{{currentPlace}}">
 	<div class="bar bar-header bar-calm">
 	  <button class="button button-icon icon ion-android-arrow-back" ng-click="goBack()"></button>
-	  <h1 class="title">Quarto Casal</h1>
+	  <h1 class="title">{{currentPlace}}</h1>
 	</div>
   	<ion-content class="padding background-kerk has-header">
 	    <!--
@@ -13,6 +13,27 @@
 	    	</div>
 	    </div>
 	    -->
+
+	    <div class="list">
+	    	<div class="item item-avatar item-button-right" ng-repeat="device in deviceList track by $index">
+	    		<img src="img/lampada.jpg">
+	    		<h2>{{device.name}}</h2>
+
+	
+	    		<p ng-show="device.on">Há lâmpada(s) acessa(s)</p>
+	    		<button ng-show="device.on" class="button button-energized" style="top: 16px;min-width:40px;min-height: 40px;" ng-click="goDeviceControl(device)">
+	    			<i class="icon ion-ios-lightbulb"></i>
+	    		</button>
+
+	    		<p ng-show="!device.on">Lâmpadas apagadas</p>
+	    		<button ng-show="!device.on" class="button button-energized" style="top: 16px;min-width:40px;min-height: 40px;" ng-click="goDeviceControl(device)">
+	    			<i class="icon ion-ios-lightbulb-outline"></i>
+	    		</button>
+
+	    	</div>
+	    </div>
+
+	    <!--
 	    <div class="list">
 	    	<div class="item item-avatar item-button-right">
 	    		<img src="img/lampada.jpg">
@@ -31,5 +52,6 @@
 	    		</button>
 	    	</div>
 	    </div>
+		-->
   	</ion-content>
 </ion-view>

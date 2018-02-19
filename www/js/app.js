@@ -10,7 +10,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    $rootScope.currentHome = 'Home';
+    /*$rootScope.currentHome = 'Home';
+    console.log('what?!');
+    $rootScope.currentPlace = '';
+    $rootScope.currentDevice = '';
+    $rootScope.currentIp = '';*/
 
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -135,7 +139,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   })
 
   .state('deviceControl', {
-    url: '/deviceControl/:parent/:device',
+    url: '/deviceControl/',
     cache: false,
     templateUrl: 'templates/deviceControl.html',
     controller: 'DeviceControlCtrl'
