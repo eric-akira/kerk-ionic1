@@ -18,18 +18,9 @@
 	    	<div class="item item-avatar item-button-right" ng-repeat="device in deviceList track by $index">
 	    		<img src="img/lampada.jpg">
 	    		<h2>{{device.name}}</h2>
-
-	
-	    		<p ng-show="device.on">Há lâmpada(s) acessa(s)</p>
-	    		<button ng-show="device.on" class="button button-energized" style="top: 16px;min-width:40px;min-height: 40px;" ng-click="goDeviceControl(device)">
+	    		<button class="button button-energized" style="top: 16px;min-width:40px;min-height: 40px;" ng-click="goDeviceControl(device)">
 	    			<i class="icon ion-ios-lightbulb"></i>
 	    		</button>
-
-	    		<p ng-show="!device.on">Lâmpadas apagadas</p>
-	    		<button ng-show="!device.on" class="button button-energized" style="top: 16px;min-width:40px;min-height: 40px;" ng-click="goDeviceControl(device)">
-	    			<i class="icon ion-ios-lightbulb-outline"></i>
-	    		</button>
-
 	    	</div>
 	    </div>
 

@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
-.run(function($ionicPlatform, $rootScope, $ionicHistory) {
+.run(function($ionicPlatform, $rootScope, $ionicHistory, $ionicLoading, $ionicPopup, CommandService, $state) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -28,7 +28,73 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
     $rootScope.goBack = function() {
       $ionicHistory.goBack();
-    }
+    };
+
+    $rootScope.scanNewDevice = function() {
+      if($rootScope.currentIp == undefined) {
+        $ionicPopup.alert({
+          title: 'Ops!',
+          template: 'Seu Kerk Control ainda não está configurado neste aparelho.',
+          okText: 'Ok',
+          okType: 'button-positive'
+        });
+
+        return;
+      }
+
+
+      $ionicLoading.show();
+      var ip = $rootScope.currentIp;
+      var newDevice = false;
+
+      CommandService.list(ip).then(
+        function(success) {
+          angular.forEach(success.data, function(value, key) {
+            var checkDeviceId = $rootScope.kerk.devicesIds.filter(function(device){
+              return device === value;
+            });
+
+            if(checkDeviceId.length == 0) {
+              console.log('new: ' + value);
+              newDevice = true;
+              $rootScope.newDeviceId = value;
+            }
+          });
+
+          $ionicLoading.hide();
+
+          if(!newDevice) {
+            $ionicPopup.alert({
+              title: 'Ops!',
+              template: 'Nenhum dispositivo novo foi encontrado.',
+              okText: 'Ok',
+              okType: 'button-positive'
+            });
+          } else {
+            $ionicPopup.alert({
+              title: 'Sucesso!',
+              template: 'Configure seu novo dispositivo!',
+              okText: 'Ok',
+              okType: 'button-positive'
+            }).then(function(){
+              $state.go('newDevice');
+            });          
+          }
+        },
+        function(error) {
+          $ionicLoading.hide();
+
+          $ionicPopup.alert({
+            title: 'Ops!',
+            template: 'Houve um erro, tente novamente.',
+            okText: 'Ok',
+            okType: 'button-positive'
+          });
+        }
+      );
+    };
+
+
   });
 })
 

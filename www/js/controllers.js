@@ -690,29 +690,7 @@ angular.module('starter.controllers', [])
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 })
 
-.controller('MainCtrl', function($scope, $state, $ionicPopup, $rootScope, CommandService) {
-  $scope.scanNewDevice = function() {
-    var ip = $rootScope.currentIp;
-    CommandService.list(ip).then(
-      function(success) {
-        angular.forEach(success.data, function(value, key) {
-          var checkDeviceId = $rootScope.kerk.devicesIds.filter(function(device){
-            return device === value;
-          });
-
-          if(checkDeviceId.length == 0) {
-            console.log('new: ' + value);
-            $scope.newDevice = true;
-            $rootScope.newDeviceId = value;
-          }
-        });
-      },
-      function(error) {
-        console.log(error);
-      }
-    );
-  };
-
+.controller('MainCtrl', function($scope, $state, $ionicPopup, $rootScope, CommandService, $ionicLoading) {
   $scope.$on('$ionicView.enter', function(e) {
     $rootScope.kerk = window.localStorage.getItem('kerk.save');
     $scope.configStatus = window.localStorage.getItem('kerk.configStatus');
@@ -725,7 +703,7 @@ angular.module('starter.controllers', [])
       $scope.newDevice = false;
 
       $scope.placeList = $rootScope.kerk[$rootScope.currentHome].placeList;
-      $scope.scanNewDevice();
+      //$scope.scanNewDevice();
     } else{
       $scope.inConfig = true;
       $scope.newDevice = false;
@@ -786,7 +764,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('PlaceControlCtrl', function($scope, $stateParams, $state, $rootScope, $ionicLoading, CommandService) {
-  $ionicLoading.show();
+  //$ionicLoading.show();
 
   $scope.getDeviceStatus = function(){
     var ip = $rootScope.currentIp;
@@ -830,7 +808,7 @@ angular.module('starter.controllers', [])
       });
     });
 
-    $scope.getDeviceStatus();
+    //$scope.getDeviceStatus();
   });
 
   $scope.goDeviceControl = function(device) {
@@ -842,14 +820,15 @@ angular.module('starter.controllers', [])
 
 .controller('DeviceControlCtrl', function($scope, $stateParams, CommandService, $ionicLoading, $ionicPopup, $interval, $rootScope) {
   
-  $ionicLoading.show();
+  
   var promiseGetStatus;
   
-  function getStatus(first) {
+  $scope.getStatus = function() {
+    $ionicLoading.show();
     //console.log(first);
 
     //console.log(typeof first);
-
+    var count = $scope.buttons.length;
 
     var ip = $rootScope.currentIp;
     var id = $rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][$rootScope.currentDevice].id;
@@ -859,23 +838,33 @@ angular.module('starter.controllers', [])
         function(data) {
           //console.log('getting status...');
           //console.log(data);
-
+          count--;
+          console.log(count);
           value.status = data.data.STATUS;
           value.statusBtnClass = (value.status == 'OFF') ? 'device-off' : 'device-on';
           value.statusTxtClass = (value.status == 'OFF') ? 'color-grey' : 'color-blue';
           value.statusText = (value.status == 'OFF') ? 'Desligado' : 'Ligado';
+
+          if(count == 0) {
+            $ionicLoading.hide();
+          }
         },
         function(error) {
           //erro...
+          count--;
+          console.log(count);
+          if(count == 0) {
+            $ionicLoading.hide();
+          }
         }
       );
     });
 
-    if(typeof first == 'boolean') {
+    /*if(typeof first == 'boolean') {
       console.log('what?');
       $ionicLoading.hide();
-    }
-  }
+    }*/
+  };
 
   $scope.$on('$ionicView.enter', function(e) {
     console.log($rootScope.kerk);
@@ -892,13 +881,13 @@ angular.module('starter.controllers', [])
 
     console.log($scope.buttons);
 
-    getStatus(true);
+    $scope.getStatus();
   });
 
-  promiseGetStatus = $interval(getStatus, 1000);
+  //promiseGetStatus = $interval(getStatus, 1000);
 
   $scope.$on('$destroy', function() {
-    $interval.cancel(promiseGetStatus);
+    //$interval.cancel(promiseGetStatus);
   });
 
   $scope.changeStatus = function(object) {
