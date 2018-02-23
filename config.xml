@@ -2,7 +2,7 @@
 <widget android-versionCode="00001" id="com.kerk.kerkcontrol" ios-CFBundleVersion="0.0.001" version="0.0.001" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Kerk Control</name>
     <description>Controle seus dispositivos Kerk.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Kerk Team</author>
+    <author email="eduardo@kerk.com.br" href="http://ionicframework.com/">Kerk Team</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-navigation href="http://ionic.local/*" />
