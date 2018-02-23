@@ -19,6 +19,7 @@
     "cordovaPlatforms": [],
     "dependencies": {
         "cordova-android": "^6.2.3",
+        "cordova-ios": "^4.4.0",
         "cordova-plugin-device": "1.1.4",
         "cordova-plugin-networkinterface": "^1.2.0",
         "cordova-plugin-splashscreen": "~4.0.1",
@@ -39,7 +40,8 @@
             "wifiwizard2": {}
         },
         "platforms": [
-            "android"
+            "android",
+            "ios"
         ]
     }
 }

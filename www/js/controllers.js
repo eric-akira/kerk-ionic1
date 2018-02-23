@@ -136,7 +136,18 @@ angular.module('starter.controllers', [])
   }
 
   function deviceReady() {
-    if($rootScope.currentSSID != 'Kerk_control' && $rootScope.currentSSID != 'kerk_control') {
+    if(ionic.Platform.isIOS()) {
+      WifiWizard2.iOSConnectNetworkAsync('Kerk_controlk', '').then(
+        function(success) {
+          console.log(success);
+          connectWifiWin(success);
+        },
+        function(error) {
+          console.log(error);
+          connectWifiFail(error);
+        }
+      );
+    } else if($rootScope.currentSSID != 'Kerk_control' && $rootScope.currentSSID != 'kerk_control') {
       WifiWizard2.scan({}, scanWin, scanFail);
     }
   }
