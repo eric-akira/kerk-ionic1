@@ -1,47 +1,45 @@
 {
-    "name": "kerkionic",
-    "version": "1.1.1",
-    "description": "kerkionic: An Ionic project",
-    "devDependencies": {
-        "gulp": "^3.5.6",
-        "gulp-clean-css": "^3.7.0",
-        "gulp-rename": "^1.2.0",
-        "gulp-sass": "^3.1.0"
+  "name": "kerkionic",
+  "version": "1.1.1",
+  "description": "kerkionic: An Ionic project",
+  "devDependencies": {
+    "gulp": "^3.5.6",
+    "gulp-clean-css": "^3.7.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-sass": "^3.1.0"
+  },
+  "cordovaPlugins": [
+    "cordova-plugin-whitelist",
+    "cordova-plugin-statusbar",
+    "cordova-plugin-device",
+    "cordova-plugin-console",
+    "cordova-plugin-splashscreen",
+    "ionic-plugin-keyboard"
+  ],
+  "cordovaPlatforms": [],
+  "dependencies": {
+    "cordova-android": "^6.2.3",
+    "cordova-plugin-device": "1.1.4",
+    "cordova-plugin-networkinterface": "^1.2.0",
+    "cordova-plugin-splashscreen": "~4.0.1",
+    "cordova-plugin-statusbar": "2.2.1",
+    "cordova-plugin-whitelist": "1.3.1",
+    "es6-promise-plugin": "^4.1.0",
+    "ionic-plugin-keyboard": "~2.2.1",
+    "wifiwizard2": "^2.1.0"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-whitelist": {},
+      "ionic-plugin-keyboard": {},
+      "cordova-plugin-networkinterface": {},
+      "wifiwizard2": {}
     },
-    "cordovaPlugins": [
-        "cordova-plugin-whitelist",
-        "cordova-plugin-statusbar",
-        "cordova-plugin-device",
-        "cordova-plugin-console",
-        "cordova-plugin-splashscreen",
-        "ionic-plugin-keyboard"
-    ],
-    "cordovaPlatforms": [],
-    "dependencies": {
-        "cordova-android": "^6.2.3",
-        "cordova-ios": "^4.4.0",
-        "cordova-plugin-device": "1.1.4",
-        "cordova-plugin-networkinterface": "^1.2.0",
-        "cordova-plugin-splashscreen": "~4.0.1",
-        "cordova-plugin-statusbar": "2.2.1",
-        "cordova-plugin-whitelist": "1.3.1",
-        "es6-promise-plugin": "^4.1.0",
-        "ionic-plugin-keyboard": "~2.2.1",
-        "wifiwizard2": "^2.1.0"
-    },
-    "cordova": {
-        "plugins": {
-            "cordova-plugin-device": {},
-            "cordova-plugin-splashscreen": {},
-            "cordova-plugin-statusbar": {},
-            "cordova-plugin-whitelist": {},
-            "ionic-plugin-keyboard": {},
-            "cordova-plugin-networkinterface": {},
-            "wifiwizard2": {}
-        },
-        "platforms": [
-            "android",
-            "ios"
-        ]
-    }
+    "platforms": [
+      "android"
+    ]
+  }
 }
