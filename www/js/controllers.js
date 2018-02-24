@@ -137,7 +137,7 @@ angular.module('starter.controllers', [])
 
   function deviceReady() {
     if(ionic.Platform.isIOS()) {
-      WifiWizard2.iOSConnectNetworkAsync('Kerk_controlk', '').then(
+      WifiWizard2.iOSConnectOpenNetworkAsync('Kerk_control').then(
         function(success) {
           console.log(success);
           connectWifiWin(success);
@@ -248,47 +248,53 @@ angular.module('starter.controllers', [])
   }
 
   $scope.checkConfig = function() {
-    $timeout(function() {
-      WifiWizard2.scan({}, 
-        function(success){
-          $rootScope.avaiableNetworks = success;
-          console.log($rootScope.avaiableNetworks);
+    if(!ionic.Platform.isIOS()) {
+      $timeout(function() {
+        WifiWizard2.scan({}, 
+          function(success){
+            $rootScope.avaiableNetworks = success;
+            console.log($rootScope.avaiableNetworks);
 
-          var targetKerk = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
-            return avaiableNetworks.SSID === 'Kerk_control';
-          });
-
-          var targetKerkControl = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
-            return avaiableNetworks.SSID === 'kerk_control';
-          });
-
-          var target = '';
-
-          if (targetKerkControl.length > 0) {
-            target = 'kerk_control';
-          } else if(targetKerk.length > 0) {
-            target = 'Kerk_control';
-          } else {
-            target = false;
-          }
-
-          if(!target) {
-            $scope.done();
-          } else {
-            $ionicLoading.hide();
-            $ionicPopup.alert({
-              title: 'Erro',
-              template: 'O SSID ou a Senha da sua rede estão errados, corrija e tente novamente',
-              okText: 'Ok',
-              okType: 'button-positive'
+            var targetKerk = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
+              return avaiableNetworks.SSID === 'Kerk_control';
             });
+
+            var targetKerkControl = $rootScope.avaiableNetworks.filter(function(avaiableNetworks){
+              return avaiableNetworks.SSID === 'kerk_control';
+            });
+
+            var target = '';
+
+            if (targetKerkControl.length > 0) {
+              target = 'kerk_control';
+            } else if(targetKerk.length > 0) {
+              target = 'Kerk_control';
+            } else {
+              target = false;
+            }
+
+            if(!target) {
+              $scope.done();
+            } else {
+              $ionicLoading.hide();
+              $ionicPopup.alert({
+                title: 'Erro',
+                template: 'O SSID ou a Senha da sua rede estão errados, corrija e tente novamente',
+                okText: 'Ok',
+                okType: 'button-positive'
+              });
+            }
+          },
+          function(error){
+            $scope.hideBack();
           }
-        },
-        function(error){
-          $scope.hideBack();
-        }
-      );
-    }, 20000);
+        );
+      }, 20000);
+    } else {
+      $timeout(function() {
+        $scope.done();
+      }, 20000);
+    }
   }
 
   $scope.done = function() {
@@ -325,20 +331,6 @@ angular.module('starter.controllers', [])
         console.log(error);
       }
     );
-  };
-
-  $scope.teste2 = function() {
-    $.ajax({
-      url: 'http://192.168.4.1/',
-      method: 'GET',
-      cache: false
-    })
-    .done(function(data) {
-      console.log(data);
-    })
-    .fail(function(error){
-      console.log(error);
-    });
   };
 
   //$http({method: 'GET', cache: false, url: 'http://' + ip + '/wifisave?=' + ssid + '&p=' + password});

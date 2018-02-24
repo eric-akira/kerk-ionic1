@@ -15,6 +15,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     $rootScope.currentPlace = '';
     $rootScope.currentDevice = '';
     $rootScope.currentIp = '';*/
+    console.log('pow');
+    window.onerror = function (errorMsg, url, lineNumber) {
+         alert('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber);
+    }
 
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);

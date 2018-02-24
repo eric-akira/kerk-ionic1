@@ -62,6 +62,13 @@ var WifiWizard2 = {
             }]);
     },
 
+    iOSConnectOpenNetwork: function (ssid, win, fail) {
+        cordova.exec(win, fail, "WifiWizard2", "iOSConnectOpenNetwork", [
+            {
+                "Ssid": ssid
+            }]);
+    },
+
     /**
      * Disconnect from network in iOS
      * @param ssid
@@ -408,6 +415,12 @@ var WifiWizard2 = {
     iOSConnectNetworkAsync: function (ssid, ssidPassword) {
         return new Promise(function(resolve, reject) {
             WifiWizard2.iOSConnectNetwork( ssid, ssidPassword, resolve, reject );
+        });
+    },
+
+    iOSConnectOpenNetworkAsync: function (ssid) {
+        return new Promise(function(resolve,reject) {
+            WifiWizard2.iOSConnectOpenNetwork(ssid, resolve, reject);
         });
     },
     /**
