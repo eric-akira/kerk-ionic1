@@ -147,8 +147,10 @@ angular.module('starter.controllers', [])
           connectWifiFail(error);
         }
       );
-    } else if($rootScope.currentSSID != 'Kerk_control' && $rootScope.currentSSID != 'kerk_control') {
+    } else if ($rootScope.currentSSID != 'Kerk_control' && $rootScope.currentSSID != 'kerk_control') {
       WifiWizard2.scan({}, scanWin, scanFail);
+    } else {
+      $ionicLoading.hide();
     }
   }
 
@@ -714,6 +716,28 @@ angular.module('starter.controllers', [])
     }
   });
 
+  $scope.sliderOptions = {
+    loop: false,
+    effect: 'fase',
+    speed: 500,
+  };
+
+  $scope.$on('$ionicSlides.sliderInitialized', function(event, data) {
+    console.log(data);
+    $scope.slider = data.slider;
+    console.log($scope.slider);
+  });
+
+  $scope.$on('$ionicSlides.slideChangeStart', function(event, data) {
+    console.log('Slide change is beginning...');
+  });
+
+  $scope.$on('$ionicSlides.slideChangeEnd', function(event, data) {
+    $scope.activeIndex = data.slider.activeIndex;
+    $scope.previousIndex = data.slider.previousIndex;
+    console.log(data.slider);
+  });
+
   $scope.goConfig = function() {
     if ($scope.configStatus == 'FirstSetUpHome') {
       $state.go('firstSetUpHome');
@@ -1059,6 +1083,10 @@ angular.module('starter.controllers', [])
   };
 })
 
+.controller('ScenesCtrl', function($scope) {
+  
+})
+
 .controller('TestesCtrl', function($scope, $ionicLoading){
   document.addEventListener('deviceready', DeviceReady, false);
 
@@ -1073,4 +1101,26 @@ angular.module('starter.controllers', [])
       }
     );
   }
+
+  $scope.sliderOptions = {
+    loop: false,
+    effect: 'fase',
+    speed: 500,
+  };
+
+  $scope.$on('$ionicSlides.sliderInitialized', function(event, data) {
+    console.log(data);
+    $scope.slider = data.slider;
+    console.log($scope.slider);
+  });
+
+  $scope.$on('$ionicSlides.slideChangeStart', function(event, data) {
+    console.log('Slide change is beginning...');
+  });
+
+  $scope.$on('$ionicSlides.slideChangeEnd', function(event, data) {
+    $scope.activeIndex = data.slider.activeIndex;
+    $scope.previousIndex = data.slider.previousIndex;
+    console.log(data.slider);
+  });
 });

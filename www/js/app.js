@@ -102,7 +102,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  $ionicConfigProvider.tabs.position('bottom');
+
   $stateProvider
 
   .state('initial', {
@@ -191,12 +193,28 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
-  .state('app.main', {
+  .state('tabs', {
+    url: '/tab',
+    abstract: true,
+    templateUrl: 'templates/tabs.html'
+  })
+
+  .state('tabs.main', {
     url: '/main',
     views: {
-      'menuContent': {
+      'main-tab': {
         templateUrl: 'templates/main.html',
         controller: 'MainCtrl'
+      }
+    }
+  })
+
+  .state('tabs.scenes', {
+    url: '/scenes',
+    views: {
+      'scenes-tab': {
+        templateUrl: 'templates/scenes.html',
+        controller: 'ScenesCtrl'
       }
     }
   })
@@ -215,10 +233,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     controller: 'DeviceControlCtrl'
   })
 
-  .state('app.config', {
+  .state('tabs.config', {
     url: '/config',
     views: {
-      'menuContent': {
+      'config-tab': {
         templateUrl: 'templates/config.html',
         controller: 'ConfigCtrl'
       }
@@ -232,10 +250,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     controller: 'NewDeviceCtrl'
   })
 
-  .state('app.testes', {
+  .state('tabs.testes', {
     url: '/testes',
     views: {
-      'menuContent': {
+      'config-tab': {
         templateUrl: 'templates/testes.html',
         controller: 'TestesCtrl'
       }
@@ -245,6 +263,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   // if none of the above states are matched, use this as the fallback
   //$urlRouterProvider.otherwise('/initial');
-  $urlRouterProvider.otherwise('/app/main');
+  $urlRouterProvider.otherwise('/tab/main');
   //$urlRouterProvider.otherwise('/firstSetUpHome');
 });

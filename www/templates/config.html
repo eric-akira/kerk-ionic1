@@ -1,11 +1,36 @@
 <ion-view view-title="Configurações">
-  <ion-content>
+    <div class="bar bar-header bar-calm">
+      <h1 class="title">Configurações</h1>
+    </div>
+  <ion-content class="has-header">
+    <div class="item item-divider">
+        Kerk Control
+    </div>
+    <div class="item item-avatar">
+        <img src="img/placeholder-avatar.png">
+        <h2>Nome do Usuário Aqui</h2>
+        <p>email@usuario.com.br</p>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button class="button button-block button-positive" ng-click="scanNewDevice()">
+                <ion-icon class="ion-plus-circled"></ion-icon> Adicionar Novo Dispositivo
+            </button>
+        </div>
+    </div>
     <div class="row">
     	<div class="col">
 	    	<button class="button button-block button-assertive" ng-click="resetarDevice()">
 	    		<ion-icon class="ion-alert-circled"></ion-icon> Apagar Todos os Dados
 	    	</button>
     	</div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button class="button button-block button-assertive" ui-sref="tabs.testes">
+                <ion-icon class="ion-alert-circled"></ion-icon> Testes
+            </button>
+        </div>
     </div>
     <!--
     <div class="row">
