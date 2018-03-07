@@ -2,7 +2,7 @@
     <div class="bar bar-header bar-calm">
         <h1 class="title">{{currentHome}}</h1>
     </div>
-    <ion-content class="background-kerk has-header" ng-class="{'has-footer': inConfig}" scroll="false">
+    <ion-content class="background-kerk has-header" scroll="false">
         <!--
         <div class="row">
         	<div class="col">
@@ -33,7 +33,7 @@
             </ion-slide-page>
             -->
             <ion-slide-page ng-repeat="place in kerk[currentHome].placeList track by $index">
-                <div class="item item-image">
+                <div class="item item-image" style="max-height: 230px;">
                     <img ng-if="place == 'Quarto Casal'" src="img/quarto-casal.jpg">
                     <img ng-if="place == 'Quarto Solteiro'" src="img/quarto-solteiro.jpg">
                     <img ng-if="place == 'Sala'" src="img/sala.jpg">
@@ -90,9 +90,9 @@
             </div>
         </div>
 
-        
+        <button class="bar bar-footer bar-balanced" ng-show="inConfig" ng-click="goConfig()">
+          <div class="title"><ion-icon class="ion-log-in"></ion-icon> Configure seu Kerk Control</div>
+        </button>
     </ion-content>
-    <button class="bar bar-footer bar-balanced" ng-show="inConfig" ng-click="goConfig()">
-      <div class="title"><ion-icon class="ion-log-in"></ion-icon> Configure seu Kerk Control</div>
-    </button>
+
 </ion-view>

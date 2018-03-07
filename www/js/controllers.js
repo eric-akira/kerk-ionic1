@@ -15,7 +15,7 @@ angular.module('starter.controllers', [])
         $state.go('firstSetUpEnd');
       } else {
         $ionicLoading.hide();
-        $state.go('app.main');
+        $state.go('tabs.main');
       }
     }
   });
@@ -415,7 +415,7 @@ angular.module('starter.controllers', [])
               okText: 'Ok',
               okType: 'button-positive'
             }).then(function(res) {
-              $state.go('app.main');
+              $state.go('tabs.main');
             });
           }
         }
@@ -435,7 +435,7 @@ angular.module('starter.controllers', [])
             okText: 'Ok',
             okType: 'button-positive'
           }).then(function(res) {
-            $state.go('app.main');
+            $state.go('tabs.main');
           });
         }
       }
@@ -457,7 +457,7 @@ angular.module('starter.controllers', [])
           okText: 'Ok',
           okType: 'button-positive'
         }).then(function(res) {
-          $state.go('app.main');
+          $state.go('tabs.main');
         });
       }
     );
@@ -480,7 +480,7 @@ angular.module('starter.controllers', [])
           okText: 'Ok',
           okType: 'button-positive'
         }).then(function(res) {
-          $state.go('app.main');
+          $state.go('tabs.main');
         });
       }
     );
@@ -614,7 +614,7 @@ angular.module('starter.controllers', [])
             window.localStorage.setItem('kerk.initial', 'done');
             window.localStorage.setItem('kerk.currentHome', home);
             $ionicLoading.hide();
-            $state.go('app.main');
+            $state.go('tabs.main');
           }
         },
         function(error) {
@@ -1000,7 +1000,7 @@ angular.module('starter.controllers', [])
           okText: 'Ok',
           okType: 'button-positive'
         }).then(function(res) {
-          $state.go('app.main');
+          $state.go('tabs.main');
         });
       }
     );
@@ -1090,7 +1090,7 @@ angular.module('starter.controllers', [])
       okText: 'Ok',
       okType: 'button-positive'
     }).then(function(res) {
-      $state.go('app.main');
+      $state.go('tabs.main');
     });
   };
 })
