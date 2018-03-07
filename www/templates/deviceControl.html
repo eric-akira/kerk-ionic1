@@ -18,7 +18,7 @@
 				</div>
 			</div>
 		</div>
-		-->
+		
 
 		<div class="card">
 			<div class="item item-text-wrap back-black">
@@ -29,6 +29,23 @@
 					</div>
 					<div class="col col-50">
 						<h2 class="color-white">Botão {{button.id}}</h2>
+						<h3 ng-class="button.statusTxtClass">{{button.statusText}}</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		-->
+
+		<div class="card">
+			<div class="item item-text-wrap" ng-repeat="button in buttons">
+				<div class="row">
+					<div class="col col-50">
+						<div class="center device-btn" ng-class="button.statusBtnClass" ng-click="changeStatus(this.button)">
+						</div>
+					</div>
+					<div class="col col-50" style="text-align: center;">
+						<i class="icon ion-ios-lightbulb" ng-class="button.statusTxtClass"></i>
+						<h2>Botão {{button.id}}</h2>
 						<h3 ng-class="button.statusTxtClass">{{button.statusText}}</h3>
 					</div>
 				</div>

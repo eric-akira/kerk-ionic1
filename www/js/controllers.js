@@ -544,10 +544,13 @@ angular.module('starter.controllers', [])
 
     if($scope.kerk.type == 'LUZ 1') {
       kerk[name][devicePlace][deviceName].buttonList = ['b1'];
+      kerk[name][devicePlace][deviceName].tipo = 'Interruptor 1';
     } else if ($scope.kerk.type == 'LUZ 2') {
       kerk[name][devicePlace][deviceName].buttonList = ['b1', 'b2'];
+      kerk[name][devicePlace][deviceName].tipo = 'Interruptor 2';
     } else if ($scope.kerk.type == 'LUZ 3') {
       kerk[name][devicePlace][deviceName].buttonList = ['b1', 'b2', 'b3'];
+      kerk[name][devicePlace][deviceName].tipo = 'Interruptor 3';
     }
 
     var count = 1;
@@ -718,7 +721,7 @@ angular.module('starter.controllers', [])
 
   $scope.sliderOptions = {
     loop: false,
-    effect: 'fase',
+    effect: 'fade',
     speed: 500,
   };
 
@@ -755,6 +758,12 @@ angular.module('starter.controllers', [])
     $rootScope.currentPlace = place;
     $state.go('placeControl');
   }
+
+  $scope.goDeviceControl = function(device, place) {
+    $rootScope.currentDevice = device;
+    $rootScope.currentPlace = place;
+    $state.go('deviceControl');
+  };
 
   /*$scope.kerk = angular.fromJson($scope.kerk);
 
@@ -1048,10 +1057,13 @@ angular.module('starter.controllers', [])
 
     if($scope.type == 'LUZ 1') {
       $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].buttonList = ['b1'];
+      $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].tipo = 'Interruptor 1';
     } else if ($scope.type == 'LUZ 2') {
       $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].buttonList = ['b1', 'b2'];
+      $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].tipo = 'Interruptor 2';
     } else if ($scope.type == 'LUZ 3') {
       $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].buttonList = ['b1', 'b2', 'b3'];
+      $rootScope.kerk[$rootScope.currentHome][devicePlace][deviceName].tipo = 'Interruptor 3';
     }
 
     var count = 1;

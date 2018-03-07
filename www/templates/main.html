@@ -32,7 +32,7 @@
                 <div class="box pink"><h1>pINK</h1></div>
             </ion-slide-page>
             -->
-            <ion-slide-page ng-repeat="place in placeList track by $index">
+            <ion-slide-page ng-repeat="place in kerk[currentHome].placeList track by $index">
                 <div class="item item-image">
                     <img ng-if="place == 'Quarto Casal'" src="img/quarto-casal.jpg">
                     <img ng-if="place == 'Quarto Solteiro'" src="img/quarto-solteiro.jpg">
@@ -42,6 +42,16 @@
                 </div>
                 <div class="item item-divider">
                     {{place}}
+                </div>
+                <div class="list">
+                    <div class="item item-avatar item-button-right" ng-repeat="device in kerk[currentHome][place].deviceList track by $index">
+                        <img src="img/lampada.jpg">
+                        <h2>{{device}}</h2>
+                        <p>{{kerk[currentHome][place][device].tipo}}</p>
+                        <button class="button button-energized" style="top: 16px;min-width:40px;min-height: 40px;" ng-click="goDeviceControl(device, place)">
+                            <i class="icon ion-ios-lightbulb"></i>
+                        </button>
+                    </div>
                 </div>
             </ion-slide-page>
         </ion-slides>
