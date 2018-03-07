@@ -11,20 +11,48 @@
         <h2>Nome do Usuário Aqui</h2>
         <p>email@usuario.com.br</p>
     </div>
-    <div class="row">
-        <div class="col">
-            <button class="button button-block button-positive" ng-click="scanNewDevice()">
-                <ion-icon class="ion-plus-circled"></ion-icon> Adicionar Novo Dispositivo
-            </button>
-        </div>
+    <div class="item item-divider">
+        Configurações de Conta
     </div>
-    <div class="row">
-    	<div class="col">
-	    	<button class="button button-block button-assertive" ng-click="resetarDevice()">
-	    		<ion-icon class="ion-alert-circled"></ion-icon> Apagar Todos os Dados
-	    	</button>
-    	</div>
+    <button class="button button-block button-stable">
+        <ion-icon class="ion-ios-locked-outline"></ion-icon> Trocar Senha
+    </button>
+    <button class="button button-block button-stable">
+        <ion-icon class="ion-ios-email-outline"></ion-icon> Trocar E-mail
+    </button>
+    <button class="button button-block button-stable">
+        <ion-icon class="ion-log-out"></ion-icon> Log Out
+    </button>
+
+    <div class="item item-divider">
+        Configurações de Dispositivos
     </div>
+    <button class="button button-block button-stable" ng-click="scanNewDevice()">
+        <ion-icon class="ion-plus-circled"></ion-icon> Adicionar Novo Dispositivo
+    </button>
+    <button class="button button-block button-stable">
+        <ion-icon class="ion-android-wifi"></ion-icon> Escanear Rede Novamente
+    </button>
+    <button class="button button-block button-stable">
+        <ion-icon class="ion-ios-home-outline"></ion-icon> Nova Residência
+    </button>
+
+    <div class="item item-divider">
+        Outras Configurações
+    </div>
+    <button class="button button-block button-stable">
+        <ion-icon class="ion-ios-help-outline"></ion-icon> Me Ajuda
+    </button>
+    <button class="button button-block button-stable">
+        <ion-icon class="ion-document-text"></ion-icon> Política de Privacidade
+    </button>
+    <button class="button button-block button-stable">
+        <ion-icon class="ion-document-text"></ion-icon> Termos de Uso
+    </button>
+    <button class="button button-block button-assertive" ng-click="resetarDevice()">
+        <ion-icon class="ion-alert-circled"></ion-icon> Apagar Todos os Dados
+    </button>
+
     <div class="row">
         <div class="col">
             <button class="button button-block button-assertive" ui-sref="tabs.testes">
