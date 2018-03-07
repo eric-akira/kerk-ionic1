@@ -6,8 +6,17 @@ body {
 	background-color: black;
 }
 
+.back-white {
+	background-color: white;
+}
+
 .background-kerk {
 	background-image: url("../img/fundo.png");
+	background-size: cover;
+}
+
+.background-kerk-branco {
+	background-image: url("../img/fundo-branco.png");
 	background-size: cover;
 }
 

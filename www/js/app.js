@@ -250,6 +250,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     controller: 'NewDeviceCtrl'
   })
 
+  .state('kerkLogin', {
+    url: '/kerkLogin',
+    cache: false,
+    templateUrl: 'templates/kerk_login.html',
+    controller: 'KerkLoginCtrl'
+  })
+
   .state('tabs.testes', {
     url: '/testes',
     views: {

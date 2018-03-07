@@ -1099,6 +1099,10 @@ angular.module('starter.controllers', [])
   
 })
 
+.controller('KerkLoginCtrl', function($scope) {
+  
+})
+
 .controller('TestesCtrl', function($scope, $ionicLoading){
   document.addEventListener('deviceready', DeviceReady, false);
 
