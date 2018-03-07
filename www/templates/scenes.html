@@ -3,8 +3,21 @@
 	  <h1 class="title">Cenas</h1>
 	</div>
   	<ion-content class="background-kerk has-header">
+  		<div class="item item-divider" ng-show="hasScenes">
+  			Suas Cenas
+  		</div>
+  		<div class="item item-text-wrap" ng-show="hasScenes">
+  			<button class="button button-block button-stable" ng-repeat="scene in scenes">
+  			    <ion-icon class="ion-ios-sunny-outline"></ion-icon> {{scene.name}}
+  			</button>
+  		</div>
+  		<div class="item item-divider">
+  			Configurar Cenas
+  		</div>
   		<div class="item item-text-wrap">
-  			Cenas...
+  			<button class="button button-block button-stable" ui-sref="tabs.newScene">
+  			    <ion-icon class="ion-ios-partlysunny-outline"></ion-icon> Nova Cena
+  			</button>
   		</div>
   	</ion-content>
 </ion-view>

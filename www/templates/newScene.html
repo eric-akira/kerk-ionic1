@@ -1,0 +1,33 @@
+<ion-view view-title="Nova Cena">
+	<div class="bar bar-header bar-calm">
+	  <h1 class="title">Nova Cena</h1>
+	</div>
+	<ion-content class="background-kerk has-header">
+		<div ng-repeat="place in kerk[currentHome].placeList">
+			<div class="item item-divider">
+				{{place}}
+			</div>
+			<div class="padding" ng-repeat="device in kerk[currentHome][place].deviceList">
+				<div class="item item-divider">
+					{{device}} - {{kerk[currentHome][place][device].tipo}}
+				</div>
+				<div class="list">
+					<div class="item item-toggle" ng-repeat="button in kerk[currentHome][place][device].buttonList">
+						Botão - {{kerk[currentHome][place][device][button].id}}
+						<label class="toggle toggle-calm">
+							<input type="checkbox">
+							<div class="track">
+								<div class="handle"></div>
+							</div>
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		
+		<button class="button button-block button-balanced">
+		    <ion-icon class="ion-document"></ion-icon> Salvar
+		</button>
+	</ion-content>
+</ion-view>

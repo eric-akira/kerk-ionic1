@@ -219,6 +219,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     }
   })
 
+  .state('tabs.newScene', {
+    url: '/newScene',
+    cache: false,
+    views: {
+      'scenes-tab': {
+        templateUrl: 'templates/newScene.html',
+        controller: 'NewSceneCtrl'
+      }
+    }
+  })
+
   .state('placeControl', {
     url: '/placeControl/',
     cache: false,
@@ -226,11 +237,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     controller: 'PlaceControlCtrl'
   })
 
-  .state('deviceControl', {
+  /*.state('deviceControl', {
     url: '/deviceControl/',
     cache: false,
     templateUrl: 'templates/deviceControl.html',
     controller: 'DeviceControlCtrl'
+  })*/
+
+  .state('tabs.deviceControl', {
+    url: '/deviceControl',
+    cache: false,
+    views: {
+      'main-tab': {
+        templateUrl: 'templates/deviceControl.html',
+        controller: 'DeviceControlCtrl'
+      }
+    }
   })
 
   .state('tabs.config', {
@@ -255,6 +277,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     cache: false,
     templateUrl: 'templates/kerk_login.html',
     controller: 'KerkLoginCtrl'
+  })
+
+  .state('kerkRegister', {
+    url: '/kerkRegister',
+    cache: false,
+    templateUrl: 'templates/kerk_register.html',
+    controller: 'KerkRegisterCtrl'
   })
 
   .state('tabs.testes', {

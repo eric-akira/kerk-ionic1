@@ -762,7 +762,7 @@ angular.module('starter.controllers', [])
   $scope.goDeviceControl = function(device, place) {
     $rootScope.currentDevice = device;
     $rootScope.currentPlace = place;
-    $state.go('deviceControl');
+    $state.go('tabs.deviceControl');
   };
 
   /*$scope.kerk = angular.fromJson($scope.kerk);
@@ -849,7 +849,7 @@ angular.module('starter.controllers', [])
 
   $scope.goDeviceControl = function(device) {
     $rootScope.currentDevice = device.name;
-    $state.go('deviceControl');
+    $state.go('tabs.deviceControl');
   };
 
 })
@@ -1095,12 +1095,24 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('ScenesCtrl', function($scope) {
+.controller('ScenesCtrl', function($scope, $rootScope) {
+  if(!$rootScope.scenes) {
+    $scope.hasScenes = false;
+  } else {
+    $scope.hasScenes = true;
+  }
+})
+
+.controller('NewSceneCtrl', function($scope, $rootScope) {
   
 })
 
 .controller('KerkLoginCtrl', function($scope) {
-  
+
+})
+
+.controller('KerkRegisterCtrl', function($scope) {
+
 })
 
 .controller('TestesCtrl', function($scope, $ionicLoading){
