@@ -37,26 +37,47 @@
 		-->
 
 		<div class="card">
+			<div class="item item-text-wrap">
+				<div class="row" style="text-align: center;">
+					<div class="col col-33">
+						Função 1
+					</div>
+					<div class="col col-33">
+						Função 2
+					</div>
+					<div class="col col-33">
+						Função 3
+					</div>
+				</div>
+			</div>
 			<div class="item item-text-wrap" ng-repeat="button in buttons">
 				<div class="row">
-					<div class="col col-50">
+					<div class="col col-33" style="text-align: center;">
 						<div class="center device-btn" ng-class="button.statusBtnClass" ng-click="changeStatus(this.button)">
+							<i class="icon ion-ios-lightbulb" ng-class="button.statusTxtClass"></i>
+							<h3 ng-class="button.statusTxtClass">{{button.statusText}}</h3>
 						</div>
 					</div>
-					<div class="col col-50" style="text-align: center;">
-						<i class="icon ion-ios-lightbulb" ng-class="button.statusTxtClass"></i>
-						<h2>Botão {{button.id}}</h2>
-						<h3 ng-class="button.statusTxtClass">{{button.statusText}}</h3>
+					<div class="col col-33" style="text-align: center; padding-top: 20px;">
+						<i class="icon ion-ios-plus"></i>
+						<h3>Configurar</h3>
+					</div>
+					<div class="col col-33" style="text-align: center; padding-top: 20px;">
+						<i class="icon ion-ios-plus"></i>
+						<h3>Configurar</h3>
 					</div>
 				</div>
 			</div>
 			<div class="item item-text-wrap">
 				<div class="row">
-					<div class="col col-50">
-						<button class="button button-block button-positive">Ligar Todos</button>
+					<div class="col col-33">
+						<button class="button button-block button-positive" style="font-size: 10px; padding: 0 5px;">Ligar Todos</button>
 					</div>
-					<div class="col col-50">
-						<button class="button button-block button-stable">Desligar Todos</button>
+					<div class="col col-33">
+						<button class="button button-block button-calm" style="font-size: 10px; padding: 0 5px;">Desligar Todos</button>
+					</div>
+					<div class="col col-33">
+						<button class="button button-block button-balanced" style="font-size: 10px; padding: 0 5px;"><i class="icon ion-ios-clock-outline"></i> Timer</button>
 					</div>
 				</div>
 			</div>

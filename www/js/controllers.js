@@ -911,13 +911,39 @@ angular.module('starter.controllers', [])
 
     $scope.buttons = [];
 
-    angular.forEach($rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][$rootScope.currentDevice].buttonList, function(value,key){
+    /*angular.forEach($rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][$rootScope.currentDevice].buttonList, function(value,key){
       $scope.buttons.push($rootScope.kerk[$rootScope.currentHome][$rootScope.currentPlace][$rootScope.currentDevice][value]);
-    });
+    });*/
+
+    //para teste...
+    $scope.currentDevice = 'Quarto';
+    $scope.buttons = [
+      {
+        id: 1,
+        status: 'on',
+        statusBtnClass: 'device-on',
+        statusTxtClass: 'color-blue',
+        statusText: 'Ligado' 
+      },
+      {
+        id: 2,
+        status: 'on',
+        statusBtnClass: 'device-off',
+        statusTxtClass: 'color-grey',
+        statusText: 'Desligado' 
+      },
+      {
+        id: 3,
+        status: 'on',
+        statusBtnClass: 'device-on',
+        statusTxtClass: 'color-blue',
+        statusText: 'Ligado' 
+      }
+    ];
 
     console.log($scope.buttons);
 
-    $scope.getStatus();
+    //$scope.getStatus();
   });
 
   //promiseGetStatus = $interval(getStatus, 1000);

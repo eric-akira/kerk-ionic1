@@ -11,8 +11,9 @@ body {
 }
 
 .background-kerk {
-	background-image: url("../img/fundo.png");
-	background-size: cover;
+	/*background-image: url("../img/fundo.png");
+	background-size: cover;*/
+	background-color: white;
 }
 
 .background-kerk-branco {
